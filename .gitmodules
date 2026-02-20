@@ -1,0 +1,18 @@
+[submodule "pack/basics/start/nvim-lspconfig"]
+	path = pack/basics/start/nvim-lspconfig
+	url = https://github.com/neovim/nvim-lspconfig.git
+[submodule "pack/basics/start/nvim-web-devicons"]
+	path = pack/basics/start/nvim-web-devicons
+	url = https://github.com/nvim-tree/nvim-web-devicons.git
+[submodule "pack/basics/start/todo-comments-nvim"]
+	path = pack/basics/start/todo-comments-nvim
+	url = https://github.com/folke/todo-comments.nvim.git
+[submodule "pack/basics/start/lush-nvim"]
+	path = pack/basics/start/lush-nvim
+	url = https://github.com/rktjmp/lush.nvim.git
+[submodule "pack/basics/start/lualine-nvim"]
+	path = pack/basics/start/lualine-nvim
+	url = https://github.com/nvim-lualine/lualine.nvim.git
+[submodule "pack/basics/start/bufferline"]
+	path = pack/basics/start/bufferline
+	url = https://github.com/akinsho/bufferline.nvim.git
