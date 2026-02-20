@@ -16,3 +16,12 @@
 [submodule "pack/basics/start/bufferline"]
 	path = pack/basics/start/bufferline
 	url = https://github.com/akinsho/bufferline.nvim.git
+[submodule "pack/basics/start/plenary-nvim"]
+	path = pack/basics/start/plenary-nvim
+	url = https://github.com/nvim-lua/plenary.nvim.git
+[submodule "pack/basics/start/blink-cmp"]
+	path = pack/basics/start/blink-cmp
+	url = https://github.com/saghen/blink.cmp.git
+[submodule "pack/basics/start/frizbee"]
+	path = pack/basics/start/frizbee
+	url = https://github.com/saghen/frizbee.git
