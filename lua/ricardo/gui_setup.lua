@@ -1,3 +1,6 @@
+-- Colours
+vim.api.nvim_win_set_option(0, "termguicolors", true)
+
 -- Window-local options
 vim.api.nvim_win_set_option(0, "number", true)
 vim.api.nvim_win_set_option(0, "relativenumber", true)

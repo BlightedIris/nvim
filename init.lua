@@ -6,10 +6,13 @@ vim.lsp.enable({
   'lua_ls', 'bashls', 'powershell_es',
 })
 -- Diagnostic box
-vim.diagnostic.open_float()
+vim.diagnostic.config({
+  virtual_text = false
+})
 
-
--- plugins
+-- Show line diagnostics automatically in hover window
+vim.o.updatetime = 250
+vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
 
 -- NOTE lualine
 require('lualine').setup({
@@ -29,14 +32,14 @@ require('lualine').setup({
 	'encoding',
         {
 	     'fileformat',
-	     symbols = { unix = 'LF', dos = 'CRLF', mac = 'CR' } 
+	     symbols = { unix = 'LF', dos = 'CRLF', mac = 'CR' }
         }
     },
     lualine_y = { 'lsp_status' },
     lualine_z = { 'location', 'searchcount' },
   },
 
-extensions = { 'fugitive', 'nvim-tree' }, 
+extensions = { 'fugitive', 'nvim-tree' },
 })
 
 require('bufferline').setup(
@@ -46,16 +49,12 @@ require('bufferline').setup(
     }
 }
 )
+
 require('plenary')
 require("todo-comments").setup()
--- require("frizbee")
 require("blink-cmp").setup({ keymap = {
     ['<C-Space>'] = { 'show', 'show_documentation' },
-    ['<Tab>']      = { 'accept', 'snippet_forward', 'fallback' },
-    ['<S-Tab>']   = { 'select_prev', 'snippet_backward', 'fallback' },
-    ['<C-e>']     = { 'hide' },
-    ['<C-n>']     = { 'select_next', 'fallback' },
-    ['<C-p>']     = { 'select_prev', 'fallback' },
+    ['<Tab>']      = { 'accept', 'fallback' },
   },
   sources = { default = { 'lsp', 'path', 'buffer' } },
   completion = { ghost_text = { enabled = true } },
