@@ -1,15 +1,57 @@
 require('ricardo')
 
+-- LSP init
+vim.lsp.enable({
+  'gopls', 'rust_analyzer', 'clangd', 'basedpyright',
+  'lua_ls', 'bashls', 'powershell_es',
+})
+-- Diagnostic box
+vim.diagnostic.open_float()
+
+
 -- plugins
-require('lualine').setup()
-require('bufferline').setup()
+
+-- NOTE lualine
+require('lualine').setup({
+  options = {
+    theme = 'auto',
+    icons_enabled = true,
+    section_separators = { left = '', right = '' },
+    component_separators = { left = '', right = '' },
+    globalstatus = true,
+    disabled_filetypes = { statusline = { 'NvimTree' } },
+  },
+  sections = {
+    lualine_a = { 'mode' },
+    lualine_b = { 'branch' },
+    lualine_c = { {'filename', path = 2 } },
+    lualine_x = {
+	'encoding',
+        {
+	     'fileformat',
+	     symbols = { unix = 'LF', dos = 'CRLF', mac = 'CR' } 
+        }
+    },
+    lualine_y = { 'lsp_status' },
+    lualine_z = { 'location', 'searchcount' },
+  },
+
+extensions = { 'fugitive', 'nvim-tree' }, 
+})
+
+require('bufferline').setup(
+{
+    options = {
+	numbers=true
+    }
+}
+)
 require('plenary')
 require("todo-comments").setup()
 -- require("frizbee")
 require("blink-cmp").setup({ keymap = {
     ['<C-Space>'] = { 'show', 'show_documentation' },
-    ['<CR>']      = { 'accept', 'fallback' },
-    ['<Tab>']     = { 'select_next', 'snippet_forward', 'fallback' },
+    ['<Tab>']      = { 'accept', 'snippet_forward', 'fallback' },
     ['<S-Tab>']   = { 'select_prev', 'snippet_backward', 'fallback' },
     ['<C-e>']     = { 'hide' },
     ['<C-n>']     = { 'select_next', 'fallback' },
@@ -18,7 +60,6 @@ require("blink-cmp").setup({ keymap = {
   sources = { default = { 'lsp', 'path', 'buffer' } },
   completion = { ghost_text = { enabled = true } },
 })
-vim.lsp.enable('basedpyright')
 
 -- TODO: Use lush to create a theme
--- TODO: blink-cmp 
+-- TODO: blink-cmd
