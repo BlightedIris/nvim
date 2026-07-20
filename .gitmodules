@@ -25,3 +25,6 @@
 [submodule "pack/basics/start/frizbee"]
 	path = pack/basics/start/frizbee
 	url = https://github.com/saghen/frizbee.git
+[submodule "pack/themes/start/melange-nvim"]
+	path = pack/themes/start/melange-nvim
+	url = https://github.com/savq/melange-nvim.git
