@@ -29,5 +29,5 @@
 	path = pack/themes/start/melange-nvim
 	url = https://github.com/savq/melange-nvim.git
 [submodule "pack/themes/start/kanagawa-nvim"]
-	path = pack/themes/opt/kanagawa-nvim
+	path = pack/themes/start/kanagawa-nvim
 	url = https://github.com/rebelot/kanagawa.nvim.git
