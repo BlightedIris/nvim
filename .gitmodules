@@ -34,3 +34,9 @@
 [submodule "pack/basics/start/telescope"]
 	path = pack/basics/start/telescope
 	url = https://github.com/nvim-telescope/telescope.nvim.git
+[submodule "pack/basics/start/neo-tree-nvim"]
+	path = pack/basics/start/neo-tree-nvim
+	url = https://github.com/nvim-neo-tree/neo-tree.nvim.git
+[submodule "pack/basics/start/nui-nvim"]
+	path = pack/basics/start/nui-nvim
+	url = https://github.com/MunifTanjim/nui.nvim.git
