@@ -18,6 +18,7 @@ require('neo-tree').setup({
             visible = false,
             hide_dotfiles = false,
         },
+        enable_icons = true,
         root_dir = function()
             return vim.fn.getcwd()
         end,
