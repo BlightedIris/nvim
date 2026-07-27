@@ -3,8 +3,17 @@ require('plenary')
 
 -- LSP init
 vim.lsp.enable({
-    'gopls', 'rust_analyzer', 'clangd', 'basedpyright',
-    'lua_ls', 'bashls', 'powershell_es',
+  gopls = {},
+  rust_analyzer = {},
+  clangd = {},
+  basedpyright = {},
+  lua_ls = {},
+  bashls = {},
+  powershell_es = {},
+  verible = {
+    cmd = { 'verible-verilog-ls' },
+    filetypes = { 'systemverilog', 'verilog' },
+  }
 })
 -- Diagnostic box
 vim.diagnostic.config({
