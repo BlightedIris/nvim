@@ -65,8 +65,5 @@ require("blink-cmp").setup({
 	sources = { default = { 'lsp', 'path', 'buffer' } },
 	completion = { ghost_text = { enabled = true } },
 })
-
-vim.keymap.set('n', '<leader>f', vim.lsp.buf.format)
-
 -- TODO: Use lush to create a theme
 -- TODO: blink-cmd
