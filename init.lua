@@ -1,4 +1,5 @@
 require('ricardo')
+require('plenary')
 
 -- LSP init
 vim.lsp.enable({
@@ -24,7 +25,6 @@ require('neo-tree').setup({
     },
 })
 
-vim.keymap.set('n', '<leader>d', ':Neotree toggle<CR>', { noremap = true })
 -- Theme
 vim.cmd.colorscheme('melange')
 
@@ -68,7 +68,6 @@ require('bufferline').setup(
     }
 )
 
-require('plenary')
 require("todo-comments").setup()
 require("blink-cmp").setup({
     fuzzy = {
@@ -118,6 +117,7 @@ vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
 vim.keymap.set('n', '<leader>f', vim.lsp.buf.format)
 
 -- File & text search
+vim.keymap.set('n', '<leader>d', ':Neotree toggle<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>ff', builtin.find_files, { noremap = true })
 vim.keymap.set('n', '<leader>fg', builtin.live_grep, { noremap = true })
 vim.keymap.set('n', '<leader>fb', builtin.buffers, { noremap = true })
@@ -154,4 +154,5 @@ vim.keymap.set('n', '<leader>gw', builtin.lsp_workspace_symbols, { noremap = tru
 vim.keymap.set('n', 'K', vim.lsp.buf.hover, { noremap = true })
 
 -- TODO: Use lush to create a theme
--- TODO: blink-cmd
+-- TODO break down the file a bit better
+-- Right now all of this is a bit messy. I'd like to have a file per plugin inside of ./lua/plugins
