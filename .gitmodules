@@ -31,3 +31,6 @@
 [submodule "pack/themes/start/kanagawa-nvim"]
 	path = pack/themes/start/kanagawa-nvim
 	url = https://github.com/rebelot/kanagawa.nvim.git
+[submodule "pack/basics/start/telescope"]
+	path = pack/basics/start/telescope
+	url = https://github.com/nvim-telescope/telescope.nvim.git
