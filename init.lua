@@ -1,118 +1,19 @@
+require('plugins')
 require('ricardo')
-require('plenary')
-
--- LSP init
-vim.lsp.config('verible', {
-  cmd = { 'verible-verilog-ls' },
-  filetypes = { 'systemverilog', 'verilog' },
-})
-
-vim.lsp.enable({
-  'gopls', 'rust_analyzer', 'clangd', 'basedpyright',
-  'lua_ls', 'bashls', 'powershell_es', 'verible',
-})
 
 -- Diagnostic box
 vim.diagnostic.config({
     virtual_text = false
 })
 
-
-require('neo-tree').setup({
-    filesystem = {
-        filtered_items = {
-            visible = false,
-            hide_dotfiles = false,
-        },
-        enable_icons = true,
-        root_dir = function()
-            return vim.fn.getcwd()
-        end,
-        follow_current_file = { enabled = true },
-    },
-})
-
 -- Theme
-vim.cmd.colorscheme('melange')
+vim.cmd.colorscheme('kanagawa-dragon')
 
 -- Show line diagnostics automatically in hover window
 vim.o.updatetime = 250
 vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {focus=false})]]
 
 -- NOTE lualine
-require('lualine').setup({
-    options = {
-        theme = 'auto',
-        icons_enabled = true,
-        section_separators = { left = '', right = '' },
-        component_separators = { left = '', right = '' },
-        globalstatus = true,
-        disabled_filetypes = { statusline = { 'NvimTree' } },
-    },
-    sections = {
-        lualine_a = { 'mode' },
-        lualine_b = { 'branch' },
-        lualine_c = { { 'filename', path = 2 } },
-        lualine_x = {
-            'encoding',
-            {
-                'fileformat',
-                symbols = { unix = 'LF', dos = 'CRLF', mac = 'CR' }
-            }
-        },
-        lualine_y = { 'lsp_status' },
-        lualine_z = { 'location', 'searchcount' },
-    },
-
-    extensions = { 'fugitive', 'nvim-tree' },
-})
-
-require('bufferline').setup(
-    {
-        options = {
-            numbers = true
-        }
-    }
-)
-
-require("todo-comments").setup()
-require("blink-cmp").setup({
-    fuzzy = {
-        implementation = 'lua',
-    },
-    keymap = {
-        ['<C-Space>'] = { 'show', 'show_documentation' },
-        ['<Tab>']     = { 'accept', 'fallback' },
-        ["<Right>"]   = { 'accept', 'fallback' },
-        ["<CR>"]      = { 'accept', 'fallback' },
-    },
-    sources = { default = { 'lsp', 'path', 'buffer' } },
-    completion = { ghost_text = { enabled = true } },
-})
-
-local telescope = require('telescope')
-local builtin = require('telescope.builtin')
-local actions = require('telescope.actions')
-
-telescope.setup({
-    defaults = {
-        mappings = {
-            i = {
-                ['<C-q>'] = actions.send_to_qflist + actions.open_qflist,
-            },
-        },
-        layout_strategy = 'vertical',
-        layout_config = {
-            vertical = { width = 0.9, height = 0.95, preview_height = 0.6 },
-        },
-    },
-    pickers = {
-        find_files = {
-            hidden = true,
-        },
-    },
-})
-
 print("Applying remaps")
 
 vim.g.mapleader = " "
@@ -120,6 +21,7 @@ vim.g.mapleader = " "
 -- Terminal mode
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
 
+local builtin = require('telescope.builtin')
 -- Format
 vim.keymap.set('n', '<leader>f', vim.lsp.buf.format)
 
@@ -161,5 +63,5 @@ vim.keymap.set('n', '<leader>gw', builtin.lsp_workspace_symbols, { noremap = tru
 vim.keymap.set('n', 'K', vim.lsp.buf.hover, { noremap = true })
 
 -- TODO: Use lush to create a theme
--- TODO break down the file a bit better
+-- TODO  break down the file a bit better
 -- Right now all of this is a bit messy. I'd like to have a file per plugin inside of ./lua/plugins
