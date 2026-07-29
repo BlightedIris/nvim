@@ -5,8 +5,6 @@ vim.lsp.config('verible', {
 })
 
 vim.lsp.enable({
-  'gopls', 'rust_analyzer', 'clangd', 'basedpyright',
-  'lua_ls', 'bashls', 'powershell_es', 'verible',
+    'gopls', 'rust_analyzer', 'clangd', 'basedpyright',
+    'lua_ls', 'bashls', 'powershell_es', 'verible',
 })
-
-
