@@ -21,6 +21,7 @@ vim.g.mapleader = " "
 -- Terminal mode
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
 
+
 local builtin = require('telescope.builtin')
 -- Format
 vim.keymap.set('n', '<leader>f', vim.lsp.buf.format)
@@ -63,5 +64,4 @@ vim.keymap.set('n', '<leader>gw', builtin.lsp_workspace_symbols, { noremap = tru
 vim.keymap.set('n', 'K', vim.lsp.buf.hover, { noremap = true })
 
 -- TODO: Use lush to create a theme
--- TODO  break down the file a bit better
--- Right now all of this is a bit messy. I'd like to have a file per plugin inside of ./lua/plugins
+-- TODO  break down the file a bit better- Right now all of this is a bit messy. I'd like to have a file per plugin inside of ./lua/plugins
