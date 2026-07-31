@@ -20,7 +20,10 @@ vim.g.mapleader = " "
 
 -- Terminal mode
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
-
+local shell = vim.fn.has("win32") == 1 and "powershell" or vim.o.shell
+print("Shell set to:")
+print(shell)
+vim.keymap.set("n", "<leader>t", function() vim.cmd.terminal(shell) end)
 
 local builtin = require('telescope.builtin')
 -- Format
