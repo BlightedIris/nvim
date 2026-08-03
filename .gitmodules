@@ -40,3 +40,6 @@
 [submodule "pack/basics/start/nui-nvim"]
 	path = pack/basics/start/nui-nvim
 	url = https://github.com/MunifTanjim/nui.nvim.git
+[submodule "pack/basics/start/codecompanion-nvim"]
+	path = pack/basics/start/codecompanion-nvim
+	url = https://github.com/olimorris/codecompanion.nvim.git
