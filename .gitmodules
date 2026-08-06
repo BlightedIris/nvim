@@ -43,3 +43,6 @@
 [submodule "pack/basics/start/codecompanion-nvim"]
 	path = pack/basics/start/codecompanion-nvim
 	url = https://github.com/olimorris/codecompanion.nvim.git
+[submodule "pack/basics/start/nvim-treesitter"]
+	path = pack/basics/start/nvim-treesitter
+	url = https://github.com/nvim-treesitter/nvim-treesitter.git
