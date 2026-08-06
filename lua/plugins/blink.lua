@@ -8,7 +8,7 @@ require("blink-cmp").setup({
         ["<Right>"]   = { 'accept', 'fallback' },
         ["<CR>"]      = { 'accept', 'fallback' },
     },
-    sources = { default = { 'lsp', 'path', 'buffer' }, per_filetype = { codecompanion = { "codecompanion" }} },
+    sources = { default = { 'lsp', 'codecompanion', 'path', 'buffer' }, per_filetype = { codecompanion = { "codecompanion" }} },
     completion = { ghost_text = { enabled = true } },
 })
 
