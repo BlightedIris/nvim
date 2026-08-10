@@ -65,6 +65,3 @@ vim.keymap.set('n', '<leader>gw', builtin.lsp_workspace_symbols, { noremap = tru
 
 -- Hover documentation (shows in a float)
 vim.keymap.set('n', 'K', vim.lsp.buf.hover, { noremap = true })
-
--- TODO: Use lush to create a theme
--- TODO  break down the file a bit better- Right now all of this is a bit messy. I'd like to have a file per plugin inside of ./lua/plugins
