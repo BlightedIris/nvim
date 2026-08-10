@@ -49,3 +49,6 @@
 [submodule "pack/basics/start/render-markdown.nvim"]
 	path = pack/basics/start/render-markdown.nvim
 	url = https://github.com/MeanderingProgrammer/render-markdown.nvim.git
+[submodule "pack/basics/start/minuet-ai.nvim"]
+	path = pack/basics/start/minuet-ai.nvim
+	url = https://github.com/milanglacier/minuet-ai.nvim.git
