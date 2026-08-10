@@ -1,0 +1,6 @@
+# Pins rust_analyzer (lsp.lua) plus the toolchain pieces it and clippy/rustfmt
+# integration need. rustup reads this automatically for any cargo/rustc/
+# rust-analyzer invocation under this directory and installs anything missing.
+[toolchain]
+channel = "stable"
+components = ["rust-analyzer", "rust-src", "rustfmt", "clippy"]

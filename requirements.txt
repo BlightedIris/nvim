@@ -1,0 +1,3 @@
+# basedpyright: pinned for lsp.lua's `basedpyright` LSP.
+# Install with: pip install -r requirements.txt
+basedpyright==1.39.9

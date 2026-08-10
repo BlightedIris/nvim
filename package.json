@@ -1,0 +1,16 @@
+{
+  "name": "nvim-config-tools",
+  "private": true,
+  "description": "LSP servers installed via npm for this nvim config. Install with: npm install",
+  "dependencies": {
+    "bash-language-server": "5.6.0",
+    "vscode-langservers-extracted": "4.10.0",
+    "yaml-language-server": "1.24.0",
+    "dockerfile-language-server-nodejs": "0.15.0",
+    "graphql-language-service-cli": "3.5.0",
+    "typescript": "6.0.3",
+    "typescript-language-server": "5.3.0",
+    "sql-language-server": "1.7.1",
+    "svelte-language-server": "0.18.3"
+  }
+}

@@ -1,0 +1,25 @@
+# Pins the lsp.lua servers that ship as standalone binary releases rather than
+# through npm/pip/go/cargo. No registry or lockfile format exists for these, so
+# this file *is* the lock -- each url is a specific tagged release asset.
+# Install with: pwsh tools/install-binaries.ps1
+
+[lua_ls]
+version = "3.19.0"
+url = "https://github.com/LuaLS/lua-language-server/releases/download/3.19.0/lua-language-server-3.19.0-win32-x64.zip"
+# extracts to <dest>/lua-language-server/bin/lua-language-server.exe
+
+[clangd]
+version = "22.1.6"
+url = "https://github.com/clangd/clangd/releases/download/22.1.6/clangd-windows-22.1.6.zip"
+# extracts to <dest>/clangd_22.1.6/bin/clangd.exe
+
+[verible]
+version = "v0.0-4135-g7807ee1a"
+url = "https://github.com/chipsalliance/verible/releases/download/v0.0-4135-g7807ee1a/verible-v0.0-4135-g7807ee1a-win64.zip"
+# extracts to <dest>/verible-v0.0-4135-g7807ee1a-win64/bin/verible-verilog-ls.exe
+
+[powershell_es]
+version = "v4.7.0"
+url = "https://github.com/PowerShell/PowerShellEditorServices/releases/download/v4.7.0/PowerShellEditorServices.zip"
+# not a standalone exe -- extracts to <dest>/PowerShellEditorServices, pass that
+# path as `bundle_path` in lsp.lua's vim.lsp.config('powershell_es', ...)
