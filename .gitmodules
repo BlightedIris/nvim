@@ -46,3 +46,6 @@
 [submodule "pack/basics/start/tree-sitter"]
 	path = pack/basics/start/tree-sitter
 	url = https://github.com/nvim-treesitter/nvim-treesitter.git
+[submodule "pack/basics/start/render-markdown.nvim"]
+	path = pack/basics/start/render-markdown.nvim
+	url = https://github.com/MeanderingProgrammer/render-markdown.nvim.git
