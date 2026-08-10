@@ -29,6 +29,11 @@ local builtin = require('telescope.builtin')
 -- Format
 vim.keymap.set('n', '<C-s>', vim.lsp.buf.format)
 
+-- Window navigation (select window by number)
+for i = 1, 9 do
+    vim.keymap.set('n', '<leader>w' .. i, i .. '<C-w>w', { noremap = true })
+end
+
 -- File & text search
 vim.keymap.set('n', '<leader>d', ':Neotree toggle<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>ff', builtin.find_files, { noremap = true })
