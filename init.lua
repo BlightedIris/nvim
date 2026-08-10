@@ -1,3 +1,5 @@
+vim.g.mapleader = " "
+
 require('plugins')
 require('ricardo')
 
@@ -15,8 +17,6 @@ vim.cmd [[autocmd CursorHold,CursorHoldI * lua vim.diagnostic.open_float(nil, {f
 
 -- NOTE lualine
 print("Applying remaps")
-
-vim.g.mapleader = " "
 
 -- Terminal mode
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")

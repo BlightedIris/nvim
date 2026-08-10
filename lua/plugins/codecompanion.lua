@@ -1,3 +1,37 @@
+-- Ollama's gpt-oss:20b doesn't reliably follow the ask_questions tool schema --
+-- it sometimes sends each question as a plain string (or each option as a
+-- plain string) instead of the required {header=..., question=...} table.
+-- question_prompt.lua then does `table.concat` over a line list containing a
+-- nil, which throws before the question ever renders and before any of the
+-- reply/skip keymaps get bound -- so the question is invisible and replying
+-- errors. Normalize malformed shapes before the tool runs.
+do
+  local ask_questions = require("codecompanion.interactions.chat.tools.builtin.ask_questions")
+  local run = ask_questions.cmds[1]
+  ask_questions.cmds[1] = function(self, args, input)
+    for i, question in ipairs(args.questions or {}) do
+      if type(question) == "string" then
+        args.questions[i] = { header = "Q" .. i, question = question }
+      elseif type(question) == "table" then
+        if type(question.question) ~= "string" then
+          question.question = tostring(question.question or question.text or "")
+        end
+        if type(question.header) ~= "string" then
+          question.header = "Q" .. i
+        end
+        for j, option in ipairs(question.options or {}) do
+          if type(option) == "string" then
+            question.options[j] = { label = option }
+          elseif type(option) == "table" and type(option.label) ~= "string" then
+            option.label = tostring(option.label or option.text or ("Option " .. j))
+          end
+        end
+      end
+    end
+    return run(self, args, input)
+  end
+end
+
 require("codecompanion").setup({
   adapters = {
     http = {
@@ -21,6 +55,13 @@ require("codecompanion").setup({
   interactions = {
     chat = {
       adapter = "ollama",
+      tools = {
+        opts = {
+          -- Load @agent's tools (run/edit/read files, search, etc.) into
+          -- every chat by default instead of typing `@agent` each time.
+          default_tools = { "agent" },
+        },
+      },
     },
     inline = {
      adapter = "ollama",
@@ -75,6 +116,10 @@ local function open_chat(adapter_name)
   vim.cmd("CodeCompanionChat adapter=" .. adapter_name)
 end
 
-vim.keymap.set({ "n", "v" }, "<leader>ao", function() open_chat("ollama") end, { noremap = true, desc = "CodeCompanion chat (Ollama)" })
-vim.keymap.set({ "n", "v" }, "<leader>ac", function() open_chat("claude_code") end, { noremap = true, desc = "CodeCompanion chat (Claude Code ACP)" })
+vim.keymap.set({ "n", "v" }, "<leader>co", function() open_chat("ollama") end, { noremap = true, desc = "CodeCompanion chat (Ollama)" })
+vim.keymap.set({ "n", "v" }, "<leader>cc", function() open_chat("claude_code") end, { noremap = true, desc = "CodeCompanion chat (Claude Code ACP)" })
+vim.api.nvim_set_keymap('n', '<leader>ch',
+  '<cmd>CodeCompanionHistory<CR>',
+  { noremap = true, silent = true, desc = "CodeCompanion chat history" })
+
 
