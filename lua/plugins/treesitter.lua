@@ -1,5 +1,5 @@
-require("nvim-treesitter").setup()
-require("nvim-treesitter").install {
+require("nvim-treesitter").setup {
+  ensure_installed = {
     'bash',
     'c',
     'cpp',
@@ -50,3 +50,8 @@ require("nvim-treesitter").install {
     'yaml',
     'zig',
 }
+}
+local opt = vim.opt
+
+opt.foldmethod = "expr"
+opt.foldexpr = "nvim_treesitter#foldexpr()"

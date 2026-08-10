@@ -27,7 +27,7 @@ vim.keymap.set("n", "<leader>t", function() vim.cmd.terminal(shell) end)
 
 local builtin = require('telescope.builtin')
 -- Format
-vim.keymap.set('n', '<leader>f', vim.lsp.buf.format)
+vim.keymap.set('n', '<C-s>', vim.lsp.buf.format)
 
 -- File & text search
 vim.keymap.set('n', '<leader>d', ':Neotree toggle<CR>', { noremap = true })
