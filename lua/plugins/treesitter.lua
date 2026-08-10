@@ -54,4 +54,12 @@ require("nvim-treesitter").setup {
 local opt = vim.opt
 
 opt.foldmethod = "expr"
-opt.foldexpr = "nvim_treesitter#foldexpr()"
+-- nvim_treesitter#foldexpr() belonged to the old nvim-treesitter plugin's
+-- Vimscript compat layer, which the main-branch rewrite (installed here)
+-- doesn't ship -- foldexpr was silently failing on every line. Neovim's
+-- built-in vim.treesitter.foldexpr() is the replacement.
+opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+-- Vim's own default foldlevel is 0 (everything closed) when unset -- that,
+-- not the broken foldexpr above, is why files opened fully collapsed.
+opt.foldlevel = 99
+opt.foldlevelstart = 99

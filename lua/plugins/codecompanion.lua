@@ -46,7 +46,12 @@ require("codecompanion").setup({
             -- keeps chat/inline VRAM use predictable. (The OLLAMA_CONTEXT_LENGTH
             -- env var does NOT work here: Ollama's Windows tray app hardcodes
             -- its own value internally and ignores what launches it with.)
-            num_ctx = { default = 8192 },
+            -- 8192 was too small for @agent tool use: once the system prompt +
+            -- tool schemas + tool output (file reads, command output) pushed
+            -- the prompt past num_ctx, llama.cpp silently shifted/dropped the
+            -- oldest context, which showed up as the model "forgetting" the
+            -- whole conversation mid-chat.
+            num_ctx = { default = 16384 },
           },
         })
       end,
@@ -115,6 +120,32 @@ local function open_chat(adapter_name)
   end
   vim.cmd("CodeCompanionChat adapter=" .. adapter_name)
 end
+
+vim.api.nvim_create_user_command("ChatDelete", function()
+  local chat = require("codecompanion.interactions.chat").buf_get_chat(vim.api.nvim_get_current_buf())
+  if not chat or not chat.opts.save_id then
+    vim.notify("No active CodeCompanion chat to delete", vim.log.levels.WARN)
+    return
+  end
+  require("codecompanion").extensions.history.delete_chat(chat.opts.save_id)
+  chat:close()
+  vim.notify("Deleted chat from history", vim.log.levels.INFO)
+end, { desc = "Delete the current CodeCompanion chat from history" })
+
+vim.api.nvim_create_user_command("ChatClearAll", function()
+  vim.ui.select({ "Yes", "No" }, { prompt = "Delete ALL saved CodeCompanion chats?" }, function(choice)
+    if choice ~= "Yes" then
+      return
+    end
+    local history = require("codecompanion").extensions.history
+    local count = 0
+    for save_id, _ in pairs(history.get_chats()) do
+      history.delete_chat(save_id)
+      count = count + 1
+    end
+    vim.notify("Deleted " .. count .. " saved chat(s)", vim.log.levels.INFO)
+  end)
+end, { desc = "Delete all saved CodeCompanion chats" })
 
 vim.keymap.set({ "n", "v" }, "<leader>co", function() open_chat("ollama") end, { noremap = true, desc = "CodeCompanion chat (Ollama)" })
 vim.keymap.set({ "n", "v" }, "<leader>cc", function() open_chat("claude_code") end, { noremap = true, desc = "CodeCompanion chat (Claude Code ACP)" })

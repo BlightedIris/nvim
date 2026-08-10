@@ -70,3 +70,8 @@ vim.keymap.set('n', '<leader>gw', builtin.lsp_workspace_symbols, { noremap = tru
 
 -- Hover documentation (shows in a float)
 vim.keymap.set('n', 'K', vim.lsp.buf.hover, { noremap = true })
+
+
+vim.keymap.set('n', '<leader>cd', ':ChatDelete<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>cda', ':ChatClearAll<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>cr', ':CodeCompanionRestart<CR>', { noremap = true })
