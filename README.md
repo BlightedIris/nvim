@@ -11,8 +11,8 @@ Personal Neovim configuration. Plugins are tracked as git submodules under
 - **A C compiler on `PATH`** (MSVC/clang/gcc, or `zig cc`) — needed by
   treesitter to compile parsers on first launch
 - **ripgrep** (`rg`) and **fd** — used by Telescope's `find_files`/`live_grep`
-- **A Nerd Font** in your terminal — for `nvim-web-devicons`, `bufferline`,
-  and `lualine` icons
+- **A Nerd Font** in your terminal — for `nvim-web-devicons` and `lualine`
+  icons
 
 Optional, for specific features:
 

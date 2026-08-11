@@ -9,10 +9,15 @@ local builtin = require('telescope.builtin')
 -- Format
 vim.keymap.set('n', '<C-s>', vim.lsp.buf.format)
 
--- Window navigation (select window by number)
-for i = 1, 9 do
-    vim.keymap.set('n', '<leader>w' .. i, i .. '<C-w>w', { noremap = true })
-end
+-- Window navigation
+vim.keymap.set('n', '<C-h>', '<C-w>h', { noremap = true })
+vim.keymap.set('n', '<C-j>', '<C-w>j', { noremap = true })
+vim.keymap.set('n', '<C-k>', '<C-w>k', { noremap = true })
+vim.keymap.set('n', '<C-l>', '<C-w>l', { noremap = true })
+
+-- Move the selected lines up/down, reindenting and reselecting
+vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", { noremap = true, silent = true })
+vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", { noremap = true, silent = true })
 
 -- File & text search
 vim.keymap.set('n', '<leader>d', ':Neotree toggle<CR>', { noremap = true })
@@ -35,6 +40,13 @@ vim.keymap.set('n', '<leader>gb', builtin.git_branches, { noremap = true })
 -- Diagnostic navigation (jump through errors/warnings in current file)
 vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { noremap = true })
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { noremap = true })
+
+-- Keep the cursor centered on half-page jumps and search so the match
+-- always lands with context on both sides instead of at the screen edge
+vim.keymap.set('n', '<C-d>', '<C-d>zz', { noremap = true })
+vim.keymap.set('n', '<C-u>', '<C-u>zz', { noremap = true })
+vim.keymap.set('n', 'n', 'nzzzv', { noremap = true })
+vim.keymap.set('n', 'N', 'Nzzzv', { noremap = true })
 
 -- Code actions (quick fixes, refactoring)
 vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { noremap = true })

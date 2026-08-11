@@ -153,4 +153,12 @@ vim.api.nvim_set_keymap('n', '<leader>ch',
   '<cmd>CodeCompanionHistory<CR>',
   { noremap = true, silent = true, desc = "CodeCompanion chat history" })
 
+-- Always spawns a fresh chat buffer, unlike <leader>co/<leader>cc which
+-- refocus an existing chat on that adapter -- use these to start a second
+-- conversation while one is already streaming a response.
+vim.keymap.set({ "n", "v" }, "<leader>cno", function() vim.cmd("CodeCompanionChat adapter=ollama") end,
+  { noremap = true, desc = "CodeCompanion new chat (Ollama)" })
+vim.keymap.set({ "n", "v" }, "<leader>cnc", function() vim.cmd("CodeCompanionChat adapter=claude_code") end,
+  { noremap = true, desc = "CodeCompanion new chat (Claude Code ACP)" })
+
 

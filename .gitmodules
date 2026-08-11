@@ -13,9 +13,6 @@
 [submodule "pack/basics/start/lualine-nvim"]
 	path = pack/basics/start/lualine-nvim
 	url = https://github.com/nvim-lualine/lualine.nvim.git
-[submodule "pack/basics/start/bufferline"]
-	path = pack/basics/start/bufferline
-	url = https://github.com/akinsho/bufferline.nvim.git
 [submodule "pack/basics/start/plenary-nvim"]
 	path = pack/basics/start/plenary-nvim
 	url = https://github.com/nvim-lua/plenary.nvim.git

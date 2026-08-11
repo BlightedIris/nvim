@@ -8,10 +8,20 @@ Leader is `<Space>` (set in `init.lua`). Custom mappings live in
 
 | Keys | Mode | Action |
 | --- | --- | --- |
-| `<leader>1`..`<leader>9` | n | Jump to window *N* (`{n}<C-w>w` under the hood) |
+| `<C-h>` / `<C-j>` / `<C-k>` / `<C-l>` | n | Move focus to the window left/down/up/right |
 | `<leader>d` | n | Toggle Neo-tree |
 | `<leader>t` | n | Open a terminal split (PowerShell on Windows, `$SHELL` elsewhere) |
 | `<Esc>` | t | Leave terminal insert mode (`<C-\><C-n>`) |
+
+The lualine winbar shows each window's number (`{N}<C-w>w` jumps straight to
+it) — that's native Neovim, not a custom mapping (`lua/plugins/lualine.lua`).
+
+## Editing
+
+| Keys | Mode | Action |
+| --- | --- | --- |
+| `J` | v | Move the selected lines down one line (reindents, keeps selection) |
+| `K` | v | Move the selected lines up one line (reindents, keeps selection) |
 
 ## Fuzzy finding (Telescope)
 
@@ -40,6 +50,8 @@ Leader is `<Space>` (set in `init.lua`). Custom mappings live in
 | `<leader>rn` | n | Rename symbol |
 | `<C-s>` | n | Format buffer |
 | `[d` / `]d` | n | Previous / next diagnostic |
+| `<C-d>` / `<C-u>` | n | Half-page down/up, cursor stays centered (`zz`) |
+| `n` / `N` | n | Next/previous search match, cursor stays centered and unfolded (`zzzv`) |
 
 Diagnostics also auto-popup on hover after 250ms idle (`updatetime` +
 `CursorHold` autocmd in `init.lua`) since `virtual_text` is disabled.
