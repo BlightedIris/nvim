@@ -1,5 +1,4 @@
-require("nvim-treesitter").setup {
-  ensure_installed = {
+require("nvim-treesitter").install({
     'bash',
     'c',
     'cpp',
@@ -49,9 +48,15 @@ require("nvim-treesitter").setup {
     'vhdl',
     'yaml',
     'zig',
-}
-}
+})
+
 local opt = vim.opt
+
+vim.api.nvim_create_autocmd('FileType', {
+    callback = function (args)
+        pcall(vim.treesitter.start, args.buf)
+    end,
+})
 
 opt.foldmethod = "expr"
 -- nvim_treesitter#foldexpr() belonged to the old nvim-treesitter plugin's
