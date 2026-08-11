@@ -60,6 +60,15 @@ require("codecompanion").setup({
   interactions = {
     chat = {
       adapter = "ollama",
+      keymaps = {
+        change_model = {
+          modes = { n = "gm" },
+          callback = function(chat)
+            return require("codecompanion.interactions.chat.keymaps.change_adapter").select_model(chat)
+          end,
+          description = "Change model (current adapter)",
+        },
+      },
       tools = {
         opts = {
           -- Load @agent's tools (run/edit/read files, search, etc.) into

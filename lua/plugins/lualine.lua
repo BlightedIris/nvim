@@ -26,13 +26,34 @@ local function is_codecompanion_chat()
     return vim.bo.filetype == 'codecompanion'
 end
 
--- Shows the model instead of a filename/path, since chat buffers have
--- neither -- lets you see which model you're talking to without `ga`.
+-- Shows "[CodeCompanion] {source} - {model}" instead of a filename/path,
+-- since chat buffers have neither -- lets you see who you're talking to
+-- without `ga`. Reads from codecompanion's own metadata table
+-- (_G.codecompanion_chat_metadata), keyed by adapter.formatted_name (e.g.
+-- "Ollama", "Claude Code") slugified into the source/model text below.
+--
+-- HTTP adapters (ollama, openai, ...) report a real selected model via
+-- adapter.schema.model.default, so those show as `ollama - gpt-oss:20b`.
+-- ACP adapters (claude_code and similar) negotiate their model over the ACP
+-- connection at runtime; codecompanion falls back to the literal string
+-- "default" there once connected but before that negotiation lands, so it's
+-- not a fact worth surfacing. Those instead show as `API - claude_code`,
+-- source "API" since the connection is a hosted API rather than a local
+-- model host, and the adapter's own name standing in for the model.
 local function codecompanion_model()
-    local chat = require('codecompanion.interactions.chat').buf_get_chat(0)
-    local model = chat and chat.adapter and chat.adapter.schema
-        and chat.adapter.schema.model and chat.adapter.schema.model.default
-    return '[CodeCompanion] - ' .. (model or '?')
+    local metadata = _G.codecompanion_chat_metadata and _G.codecompanion_chat_metadata[vim.api.nvim_get_current_buf()]
+    local adapter = metadata and metadata.adapter
+    if not adapter or not adapter.name then
+        return '[CodeCompanion] - ?'
+    end
+
+    local slug = adapter.name:lower():gsub('%s+', '_')
+
+    if adapter.type == 'acp' then
+        return '[CodeCompanion] API - ' .. slug
+    end
+
+    return '[CodeCompanion] ' .. slug .. ' - ' .. (adapter.model or '?')
 end
 
 require('lualine').setup({

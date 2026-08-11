@@ -67,3 +67,8 @@ vim.keymap.set('n', 'K', vim.lsp.buf.hover, { noremap = true })
 vim.keymap.set('n', '<leader>cd', ':ChatDelete<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>cda', ':ChatClearAll<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>cr', ':CodeCompanionRestart<CR>', { noremap = true })
+
+-- Open the remap cheatsheet (resolved via stdpath so it works on any machine)
+vim.keymap.set('n', '<leader>?', function()
+    vim.cmd.edit(vim.fn.stdpath('config') .. '/REMAPS.md')
+end, { noremap = true, desc = 'Open remap cheatsheet' })

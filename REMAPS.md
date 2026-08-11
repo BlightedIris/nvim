@@ -12,6 +12,7 @@ Leader is `<Space>` (set in `init.lua`). Custom mappings live in
 | `<leader>d` | n | Toggle Neo-tree |
 | `<leader>t` | n | Open a terminal split (PowerShell on Windows, `$SHELL` elsewhere) |
 | `<Esc>` | t | Leave terminal insert mode (`<C-\><C-n>`) |
+| `<leader>?` | n | Open this cheatsheet (`REMAPS.md`, resolved via `stdpath('config')`) |
 
 The lualine winbar shows each window's number (`{N}<C-w>w` jumps straight to
 it) — that's native Neovim, not a custom mapping (`lua/plugins/lualine.lua`).
