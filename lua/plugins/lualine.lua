@@ -22,6 +22,19 @@ local function winnr()
     return tostring(vim.fn.winnr())
 end
 
+local function is_codecompanion_chat()
+    return vim.bo.filetype == 'codecompanion'
+end
+
+-- Shows the model instead of a filename/path, since chat buffers have
+-- neither -- lets you see which model you're talking to without `ga`.
+local function codecompanion_model()
+    local chat = require('codecompanion.interactions.chat').buf_get_chat(0)
+    local model = chat and chat.adapter and chat.adapter.schema
+        and chat.adapter.schema.model and chat.adapter.schema.model.default
+    return '[CodeCompanion] - ' .. (model or '?')
+end
+
 require('lualine').setup({
     options = {
         theme = 'auto',
@@ -39,7 +52,8 @@ require('lualine').setup({
                 window_list,
                 cond = function() return #vim.api.nvim_tabpage_list_wins(0) > 1 end,
             },
-            { 'filename', path = 2 },
+            { codecompanion_model, cond = is_codecompanion_chat },
+            { 'filename', path = 2, cond = function() return not is_codecompanion_chat() end },
         },
         lualine_x = {
             'encoding',
