@@ -54,3 +54,7 @@ To pull in submodule updates later:
 ```powershell
 git submodule update --remote --merge
 ```
+
+## Keymaps
+
+See [REMAPS.md](REMAPS.md) for the full cheatsheet.
