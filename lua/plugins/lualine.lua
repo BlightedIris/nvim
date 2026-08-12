@@ -1,27 +1,3 @@
--- Lists the windows in the current tabpage as "1 2 [3] 4", bracketing the
--- currently focused window, so its number can be used directly with
--- `{N}<C-w>w` instead of cycling with `<C-w>w`/`<C-w>h` etc.
-local function window_list()
-    local cur_win = vim.api.nvim_get_current_win()
-    local wins = vim.tbl_filter(function(win)
-        return vim.api.nvim_win_get_config(win).relative == ''
-    end, vim.api.nvim_tabpage_list_wins(0))
-    table.sort(wins, function(a, b)
-        return vim.api.nvim_win_get_number(a) < vim.api.nvim_win_get_number(b)
-    end)
-
-    local parts = {}
-    for _, win in ipairs(wins) do
-        local number = vim.api.nvim_win_get_number(win)
-        parts[#parts + 1] = win == cur_win and ('[' .. number .. ']') or tostring(number)
-    end
-    return table.concat(parts, ' ')
-end
-
-local function winnr()
-    return tostring(vim.fn.winnr())
-end
-
 local function is_codecompanion_chat()
     return vim.bo.filetype == 'codecompanion'
 end
@@ -56,6 +32,68 @@ local function codecompanion_model()
     return '[CodeCompanion] ' .. slug .. ' - ' .. (adapter.model or '?')
 end
 
+-- Caches the machine's default WSL distro name (queried once via `wsl -l`)
+-- for terminal buffers that were started with a bare `wsl` (no `-d`).
+local wsl_default_distro
+local function get_wsl_default_distro()
+    if wsl_default_distro then
+        return wsl_default_distro
+    end
+
+    local ok, out = pcall(vim.fn.system, { 'wsl.exe', '-l', '-q' })
+    if ok and vim.v.shell_error == 0 then
+        for line in out:gsub('%z', ''):gmatch('[^\r\n]+') do
+            line = vim.trim(line)
+            if line ~= '' then
+                wsl_default_distro = line
+                break
+            end
+        end
+    end
+
+    wsl_default_distro = wsl_default_distro or 'wsl'
+    return wsl_default_distro
+end
+
+-- Terminal buffer names look like `term://{cwd}//{pid}:{cmd}`, where {cmd} is
+-- whatever was passed to `:terminal`. Reduce that down to just the process
+-- name, e.g. "powershell", "python" -- and for `wsl`, name the distro too.
+local function terminal_display_name(buf)
+    local cmd = vim.api.nvim_buf_get_name(buf):match('^term://.-//%d+:(.*)$') or 'terminal'
+    local exe = cmd:match('^%S+') or cmd
+    exe = (exe:match('([^\\/]+)$') or exe):gsub('%.exe$', '')
+
+    if exe == 'wsl' then
+        local distro = cmd:match('%-d%s+(%S+)') or cmd:match('%-%-distribution%s+(%S+)')
+        return 'wsl (' .. (distro or get_wsl_default_distro()) .. ')'
+    end
+
+    return exe
+end
+
+-- Winbar title shown at the top of every split: bare filename for normal
+-- buffers, process name for terminals, and fixed labels for the "chrome"
+-- filetypes that don't have a meaningful filename of their own.
+local function winbar_title()
+    local buf = vim.api.nvim_get_current_buf()
+    local ft = vim.bo[buf].filetype
+
+    if ft == 'neo-tree' then
+        return 'workplace'
+    end
+
+    if ft == 'codecompanion' then
+        return 'Chat'
+    end
+
+    if vim.bo[buf].buftype == 'terminal' then
+        return terminal_display_name(buf)
+    end
+
+    local name = vim.api.nvim_buf_get_name(buf)
+    return name == '' and '[No Name]' or vim.fn.fnamemodify(name, ':t')
+end
+
 require('lualine').setup({
     options = {
         theme = 'auto',
@@ -69,10 +107,6 @@ require('lualine').setup({
         lualine_a = { 'mode' },
         lualine_b = { 'branch' },
         lualine_c = {
-            {
-                window_list,
-                cond = function() return #vim.api.nvim_tabpage_list_wins(0) > 1 end,
-            },
             { codecompanion_model, cond = is_codecompanion_chat },
             { 'filename', path = 2, cond = function() return not is_codecompanion_chat() end },
         },
@@ -87,12 +121,12 @@ require('lualine').setup({
         lualine_z = { 'location', 'searchcount' },
     },
 
-    -- Per-window number shown at the top of every split.
+    -- Per-window title shown at the top of every split.
     winbar = {
-        lualine_c = { winnr },
+        lualine_a = { winbar_title },
     },
     inactive_winbar = {
-        lualine_c = { winnr },
+        lualine_a = { winbar_title },
     },
 
     extensions = { 'fugitive', 'nvim-tree' },
