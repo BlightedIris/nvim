@@ -1,7 +1,7 @@
 require('plenary')
 
-require("plugins.blink")
 require("plugins.lsp")
+require("plugins.blink")
 require("plugins.lualine")
 require("plugins.neo-tree")
 require("plugins.telescope")
@@ -9,4 +9,3 @@ require("plugins.todo-comments")
 require("plugins.codecompanion")
 require("plugins.treesitter")
 require("plugins.render-markdown")
-require("plugins.minuet-ai")
