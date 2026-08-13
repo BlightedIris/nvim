@@ -25,13 +25,71 @@ do
     end
 end
 
+local chat_state_path = vim.fs.joinpath(vim.fn.stdpath("state"), "codecompanion-last-chat.json")
+local chat_state = { adapter = "ollama", models = {} }
+
+do
+    local ok, content = pcall(vim.fn.readfile, chat_state_path)
+    if ok and content[1] then
+        local decoded_ok, decoded = pcall(vim.json.decode, table.concat(content, "\n"))
+        if decoded_ok and type(decoded) == "table" then
+            chat_state = vim.tbl_deep_extend("force", chat_state, decoded)
+        end
+    end
+end
+
+local function save_chat_state()
+    vim.fn.mkdir(vim.fs.dirname(chat_state_path), "p")
+    local ok, result = pcall(vim.fn.writefile, { vim.json.encode(chat_state) }, chat_state_path)
+    if not ok or result == -1 then
+        vim.notify("Could not save CodeCompanion chat defaults: " .. tostring(result), vim.log.levels.WARN)
+    end
+end
+
+local function default_chat_adapter()
+    local model = chat_state.models[chat_state.adapter]
+    if model then
+        return { name = chat_state.adapter, model = model }
+    end
+    return chat_state.adapter
+end
+
+local function ollama_default_model(adapter)
+    local choices = adapter.schema.model.choices
+    if type(choices) == "function" then
+        choices = choices(adapter, { async = false })
+    end
+
+    if type(choices) ~= "table" then
+        return chat_state.models.ollama or ""
+    end
+
+    local installed = vim.iter(choices):map(function(key, value)
+        if type(key) == "number" then
+            return type(value) == "table" and value.id or value
+        end
+        return type(value) == "table" and value.id or key
+    end):filter(function(model)
+        return type(model) == "string" and model ~= ""
+    end):totable()
+    table.sort(installed)
+
+    if chat_state.models.ollama and vim.list_contains(installed, chat_state.models.ollama) then
+        return chat_state.models.ollama
+    end
+
+    chat_state.models.ollama = installed[1]
+    save_chat_state()
+    return chat_state.models.ollama or ""
+end
+
 require("codecompanion").setup({
     adapters = {
         http = {
             ollama = function()
                 return require("codecompanion.adapters").extend("ollama", {
                     schema = {
-                        model = { default = "gpt-oss:20b" },
+                        model = { default = ollama_default_model },
                         keep_alive = { default = "30m" },
                         num_ctx = { default = 16384 },
                     },
@@ -41,7 +99,7 @@ require("codecompanion").setup({
     },
     interactions = {
         chat = {
-            adapter = "ollama",
+            adapter = default_chat_adapter(),
             keymaps = {
                 change_model = {
                     modes = { n = "gm" },
@@ -91,6 +149,44 @@ require("codecompanion").setup({
 
 local Chat = require("codecompanion.interactions.chat")
 
+local function selected_model(chat)
+    if chat.adapter.type == "acp" then
+        if chat.acp_connection then
+            local models = chat.acp_connection:get_models()
+            if models and models.currentModelId then
+                return models.currentModelId
+            end
+        end
+        return chat.adapter.defaults and chat.adapter.defaults.model
+    end
+
+    if chat.adapter.type == "http" then
+        local model = chat.settings and chat.settings.model or chat.adapter.schema.model.default
+        return type(model) == "string" and model or nil
+    end
+
+    return chat.adapter.defaults and chat.adapter.defaults.model
+end
+
+vim.api.nvim_create_autocmd("User", {
+    pattern = "CodeCompanionChatDone",
+    desc = "Remember the adapter and model from the last successful chat",
+    callback = function(args)
+        local chat = Chat.buf_get_chat((args.data or {}).bufnr)
+        if not chat or chat.status ~= "success" or not chat.adapter or type(chat.adapter.name) ~= "string" then
+            return
+        end
+
+        local model = selected_model(chat)
+        chat_state.adapter = chat.adapter.name
+        if type(model) == "string" and model ~= "" then
+            chat_state.models[chat_state.adapter] = model
+        end
+        require("codecompanion.config").interactions.chat.adapter = default_chat_adapter()
+        save_chat_state()
+    end,
+})
+
 local function host_win()
     for _, win in ipairs(vim.api.nvim_list_wins()) do
         if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "codecompanion" then
@@ -99,17 +195,42 @@ local function host_win()
     end
 end
 
-local function find_chat(adapter_name)
+local function find_chat(adapter_name, model)
     for _, entry in ipairs(Chat.buf_get_chat()) do
-        if entry.chat.adapter and entry.chat.adapter.name == adapter_name then
-            return entry.chat
+        local chat = entry.chat
+        if chat.adapter and chat.adapter.name == adapter_name and (not model or selected_model(chat) == model) then
+            return chat
         end
     end
 end
 
-local function open_chat(adapter_name)
+local function adapter_available(adapter_name)
+    if adapter_name == "ollama" then
+        local result = vim.system({
+            "curl",
+            "--silent",
+            "--fail",
+            "--max-time",
+            "1",
+            "http://localhost:11434/api/tags",
+        }):wait()
+        if result.code ~= 0 then
+            vim.notify("Ollama is not running on localhost:11434", vim.log.levels.WARN)
+            return false
+        end
+    end
+    return true
+end
+
+local function open_chat(force_new)
+    local adapter_name = chat_state.adapter
+    local model = chat_state.models[adapter_name]
+    if not adapter_available(adapter_name) then
+        return
+    end
+
     local host = host_win()
-    local chat = find_chat(adapter_name)
+    local chat = not force_new and find_chat(adapter_name, model)
 
     if chat then
         if host then
@@ -123,8 +244,12 @@ local function open_chat(adapter_name)
         return
     end
 
-    -- no chat for this adapter yet
-    vim.cmd("CodeCompanionChat adapter=" .. adapter_name)
+    -- No chat for the last successful adapter/model pair yet.
+    local command = "CodeCompanionChat adapter=" .. vim.fn.fnameescape(adapter_name)
+    if model then
+        command = command .. " model=" .. vim.fn.fnameescape(model)
+    end
+    vim.cmd(command)
     if not (host and vim.api.nvim_win_is_valid(host)) then return end
 
     local new_win = vim.api.nvim_get_current_win()
@@ -133,20 +258,13 @@ local function open_chat(adapter_name)
     local new_buf = vim.api.nvim_win_get_buf(new_win)
     vim.api.nvim_win_close(new_win, false)
     vim.api.nvim_win_set_buf(host, new_buf)
-    local created = find_chat(adapter_name)
+    local created = Chat.buf_get_chat(new_buf)
     if created then created.ui.winnr = host end
     vim.api.nvim_set_current_win(host)
 end
 vim.api.nvim_create_user_command("ChatDelete", function()
-    local chat = require("codecompanion.interactions.chat").buf_get_chat(vim.api.nvim_get_current_buf())
-    if not chat or not chat.opts.save_id then
-        vim.notify("No active CodeCompanion chat to delete", vim.log.levels.WARN)
-        return
-    end
-    require("codecompanion").extensions.history.delete_chat(chat.opts.save_id)
-    chat:close()
-    vim.notify("Deleted chat from history", vim.log.levels.INFO)
-end, { desc = "Delete the current CodeCompanion chat from history" })
+    require("ricardo.chat_delete").open()
+end, { desc = "Select saved CodeCompanion chats to delete" })
 
 vim.api.nvim_create_user_command("ChatClearAll", function()
     vim.ui.select({ "Yes", "No" }, { prompt = "Delete ALL saved CodeCompanion chats?" }, function(choice)
@@ -154,27 +272,24 @@ vim.api.nvim_create_user_command("ChatClearAll", function()
             return
         end
         local history = require("codecompanion").extensions.history
-        local count = 0
-        for save_id, _ in pairs(history.get_chats()) do
-            history.delete_chat(save_id)
-            count = count + 1
-        end
+        local save_ids = vim.tbl_keys(history.get_chats())
+        local count = require("ricardo.chat_delete").delete(save_ids)
         vim.notify("Deleted " .. count .. " saved chat(s)", vim.log.levels.INFO)
     end)
 end, { desc = "Delete all saved CodeCompanion chats" })
 
-vim.keymap.set({ "n", "v" }, "<leader>co", function() open_chat("ollama") end,
-    { noremap = true, desc = "CodeCompanion chat (Ollama)" })
-vim.keymap.set({ "n", "v" }, "<leader>cc", function() open_chat("claude_code") end,
-    { noremap = true, desc = "CodeCompanion chat (Claude Code ACP)" })
+local function open_last_chat() open_chat(false) end
+local function new_last_chat() open_chat(true) end
+
+vim.keymap.set({ "n", "v" }, "<leader>co", open_last_chat,
+    { noremap = true, desc = "CodeCompanion chat (last successful provider/model)" })
+vim.keymap.set({ "n", "v" }, "<leader>cc", open_last_chat,
+    { noremap = true, desc = "CodeCompanion chat (last successful provider/model)" })
 vim.api.nvim_set_keymap('n', '<leader>ch',
     '<cmd>CodeCompanionHistory<CR>',
     { noremap = true, silent = true, desc = "CodeCompanion chat history" })
 
--- Always spawns a fresh chat buffer, unlike <leader>co/<leader>cc which
--- refocus an existing chat on that adapter -- use these to start a second
--- conversation while one is already streaming a response.
-vim.keymap.set({ "n", "v" }, "<leader>cno", function() vim.cmd("CodeCompanionChat adapter=ollama") end,
-    { noremap = true, desc = "CodeCompanion new chat (Ollama)" })
-vim.keymap.set({ "n", "v" }, "<leader>cnc", function() vim.cmd("CodeCompanionChat adapter=claude_code") end,
-    { noremap = true, desc = "CodeCompanion new chat (Claude Code ACP)" })
+vim.keymap.set({ "n", "v" }, "<leader>cno", new_last_chat,
+    { noremap = true, desc = "CodeCompanion new chat (last successful provider/model)" })
+vim.keymap.set({ "n", "v" }, "<leader>cnc", new_last_chat,
+    { noremap = true, desc = "CodeCompanion new chat (last successful provider/model)" })

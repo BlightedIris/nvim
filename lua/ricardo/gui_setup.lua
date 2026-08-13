@@ -37,8 +37,28 @@ vim.api.nvim_create_autocmd("VimEnter", {
         -- Left sidebar
         vim.cmd("Neotree show")
 
-        -- Right sidebar: locally hosted model (see plugins/codecompanion.lua)
-        vim.cmd("CodeCompanionChat adapter=ollama")
+        -- Right sidebar: only open the local model when its server is available.
+        -- Keep this asynchronous so an offline Ollama does not delay startup.
+        vim.system({
+            "curl",
+            "--silent",
+            "--fail",
+            "--max-time",
+            "1",
+            "http://localhost:11434/api/tags",
+        }, function(result)
+            if result.code ~= 0 then
+                return
+            end
+
+            vim.schedule(function()
+                if not vim.api.nvim_win_is_valid(editor_win) then
+                    return
+                end
+                pcall(vim.cmd, "CodeCompanionChat adapter=ollama")
+                vim.api.nvim_set_current_win(editor_win)
+            end)
+        end)
 
         vim.api.nvim_set_current_win(editor_win)
     end,

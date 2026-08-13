@@ -77,7 +77,7 @@ ghost text, prioritized via `score_offset`).
 | `<leader>cno` | n, v | Always start a **new** Ollama chat, even if one is already open |
 | `<leader>cnc` | n, v | Always start a **new** Claude Code ACP chat, even if one is already open |
 | `<leader>ch` | n | `:CodeCompanionHistory` — browse saved chats |
-| `<leader>cd` | n | `:ChatDelete` — delete the current chat from history |
+| `<leader>cd` | n | Open saved chats for deletion; `<Tab>` marks multiple chats, then `<Enter>` deletes them |
 | `<leader>cda` | n | `:ChatClearAll` — delete *all* saved chats (prompts to confirm) |
 | `<leader>cr` | n | `:CodeCompanionRestart` |
 

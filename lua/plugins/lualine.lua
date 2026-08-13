@@ -2,6 +2,14 @@ local function is_codecompanion_chat()
     return vim.bo.filetype == 'codecompanion'
 end
 
+-- CodeCompanion History stores the generated chat title in the buffer name.
+-- Remove its decorative icon before displaying the title in the winbar.
+local function codecompanion_chat_name()
+    local name = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ':t')
+    name = name:gsub('^✨%s*', '')
+    return name == '' and '[No Name]' or name
+end
+
 -- Shows "[CodeCompanion] {source} - {model}" instead of a filename/path,
 -- since chat buffers have neither -- lets you see who you're talking to
 -- without `ga`. Reads from codecompanion's own metadata table
@@ -124,9 +132,15 @@ require('lualine').setup({
     -- Per-window title shown at the top of every split.
     winbar = {
         lualine_a = { winbar_title },
+        lualine_c = {
+            { codecompanion_chat_name, cond = is_codecompanion_chat },
+        },
     },
     inactive_winbar = {
         lualine_a = { winbar_title },
+        lualine_c = {
+            { codecompanion_chat_name, cond = is_codecompanion_chat },
+        },
     },
 
     extensions = { 'fugitive', 'nvim-tree' },

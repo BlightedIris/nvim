@@ -64,7 +64,8 @@ vim.keymap.set('n', '<leader>gw', builtin.lsp_workspace_symbols, { noremap = tru
 vim.keymap.set('n', 'K', vim.lsp.buf.hover, { noremap = true })
 
 
-vim.keymap.set('n', '<leader>cd', ':ChatDelete<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>cd', ':ChatDelete<CR>',
+    { noremap = true, silent = true, desc = 'Select saved chats to delete' })
 vim.keymap.set('n', '<leader>cda', ':ChatClearAll<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>cr', ':CodeCompanionRestart<CR>', { noremap = true })
 
