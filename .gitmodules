@@ -52,3 +52,6 @@
 [submodule "pack/basics/start/mason.nvim"]
 	path = pack/basics/start/mason.nvim
 	url = https://github.com/mason-org/mason.nvim.git
+[submodule "pack/basics/start/runtasks.nvim"]
+	path = pack/basics/start/runtasks.nvim
+	url = https://github.com/BlightedIris/runtasks.nvim.git
