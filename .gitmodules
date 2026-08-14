@@ -49,3 +49,6 @@
 [submodule "pack/basics/start/codecompanion-history.nvim"]
 	path = pack/basics/start/codecompanion-history.nvim
 	url = https://github.com/ravitemer/codecompanion-history.nvim.git
+[submodule "pack/basics/start/mason.nvim"]
+	path = pack/basics/start/mason.nvim
+	url = https://github.com/mason-org/mason.nvim.git

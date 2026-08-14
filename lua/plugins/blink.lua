@@ -12,7 +12,7 @@ require("blink-cmp").setup({
         providers = {},
     },
     completion = {
-        ghost_text = { enabled = false },
+        ghost_text = { enabled = true },
         trigger = { prefetch_on_insert = false }, -- avoid firing a request on every insert-mode entry
     },
 })
