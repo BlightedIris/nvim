@@ -1,5 +1,6 @@
 require('plenary')
 
+require("plugins.mason")
 require("plugins.lsp")
 require("plugins.blink")
 require("plugins.lualine")
