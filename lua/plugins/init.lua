@@ -2,8 +2,12 @@ require('plenary')
 
 require("plugins.window-picker")
 require("plugins.mason")
-require("plugins.lsp")
 require("plugins.blink")
+require("plugins.lsp")
+-- after plugins.lsp: capabilities/overrides must be registered before servers
+-- are auto-enabled
+require("plugins.mason-lspconfig")
+require("plugins.conform")
 require("plugins.lualine")
 require("plugins.neo-tree")
 require("plugins.telescope")

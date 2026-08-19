@@ -6,8 +6,11 @@ print(shell)
 vim.keymap.set("n", "<leader>t", function() vim.cmd.terminal(shell) end)
 
 local builtin = require('telescope.builtin')
--- Format
-vim.keymap.set('n', '<C-s>', vim.lsp.buf.format)
+-- Format: single action for every filetype. Conform uses the configured
+-- formatter (Mason-installed) and falls back to the LSP when there is none.
+vim.keymap.set({ 'n', 'v' }, '<C-s>', function()
+    require('conform').format({ async = true, lsp_format = 'fallback' })
+end, { noremap = true, desc = 'Format buffer/selection' })
 
 -- Window navigation
 vim.keymap.set('n', '<C-h>', '<C-w>h', { noremap = true })
@@ -37,9 +40,12 @@ vim.keymap.set('n', 'gs', builtin.lsp_document_symbols, { noremap = true })
 vim.keymap.set('n', '<leader>gc', builtin.git_commits, { noremap = true })
 vim.keymap.set('n', '<leader>gb', builtin.git_branches, { noremap = true })
 
--- Diagnostic navigation (jump through errors/warnings in current file)
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { noremap = true })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { noremap = true })
+-- Diagnostic navigation (jump through errors/warnings in current file).
+-- Uppercase so mini.bracketed keeps the lowercase `[d` / `]d` of its
+-- `[`/`]` + suffix family (see lua/plugins/mini-bracketed.lua)
+vim.keymap.set('n', '[D', function() vim.diagnostic.jump({ count = -1 }) end, { noremap = true })
+vim.keymap.set('n', ']D', function() vim.diagnostic.jump({ count = 1 }) end, { noremap = true })
+
 
 -- Keep the cursor centered on half-page jumps and search so the match
 -- always lands with context on both sides instead of at the screen edge

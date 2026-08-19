@@ -20,14 +20,22 @@ require("blink-cmp").setup({
         ['<Tab>']     = { 'accept', 'fallback' },
     },
     sources = {
-        default = { 'lsp', 'codecompanion', 'path', 'buffer' },
-        per_filetype = { codecompanion = { "codecompanion" } },
-        providers = {},
+        default = { 'lsp', 'path', 'snippets', 'buffer' },
+        per_filetype = { codecompanion = { 'codecompanion' } },
+        providers = {
+            codecompanion = {
+                name = 'CodeCompanion',
+                module = 'codecompanion.providers.completion.blink',
+                score_offset = 100,
+            },
+        },
     },
+    snippets = { preset = 'default' }, -- friendly-snippets is installed
     completion = {
         menu = { border = 'single' },
         ghost_text = { enabled = true },
         documentation = { auto_show = false, window = { border = 'single' } },
-        trigger = { prefetch_on_insert = false }, -- avoid firing a request on every insert-mode entry
+        trigger = { prefetch_on_insert = false },
     },
+    signature = { enabled = true },
 })
