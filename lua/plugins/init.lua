@@ -11,3 +11,12 @@ require("plugins.todo-comments")
 require("plugins.codecompanion")
 require("plugins.treesitter")
 require("plugins.render-markdown")
+
+-- mini.nvim modules
+require("plugins.mini-ai")
+require("plugins.mini-align")
+require("plugins.mini-bracketed")
+require("plugins.mini-bufremove")
+require("plugins.mini-sessions")
+require("plugins.mini-splitjoin")
+require("plugins.mini-surround")

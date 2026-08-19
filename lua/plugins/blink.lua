@@ -1,5 +1,8 @@
-require('blink-cmp').build():pwait()
-
+-- `setup()` itself resolves the fuzzy matcher: it checks target/release for a
+-- locally built library and only falls back to downloading a prebuilt binary if
+-- that's missing. The Rust library is built from source here via
+-- `cargo build --release` (see README), which also writes target/release/version
+-- with the checked-out SHA so blink knows the build is current.
 require("blink-cmp").setup({
     fuzzy = {
         implementation = 'rust',
@@ -12,6 +15,8 @@ require("blink-cmp").setup({
     },
     keymap = {
         ['<C-Space>'] = { 'show', 'show_documentation' },
+        -- Windows Terminal/ConPTY sends NUL for Ctrl+Space, which Neovim sees as <C-@>
+        ['<C-@>']     = { 'show', 'show_documentation' },
         ['<Tab>']     = { 'accept', 'fallback' },
     },
     sources = {
