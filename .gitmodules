@@ -82,3 +82,9 @@
 [submodule "pack/basics/start/mini.bufremove"]
 	path = pack/basics/start/mini.bufremove
 	url = https://github.com/nvim-mini/mini.bufremove.git
+[submodule "pack/basics/start/mason-lspconfig.nvim"]
+	path = pack/basics/start/mason-lspconfig.nvim
+	url = https://github.com/mason-org/mason-lspconfig.nvim.git
+[submodule "pack/basics/start/conform.nvim"]
+	path = pack/basics/start/conform.nvim
+	url = https://github.com/stevearc/conform.nvim.git
