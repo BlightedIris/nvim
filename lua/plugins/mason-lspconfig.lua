@@ -10,14 +10,7 @@
 require("mason-lspconfig").setup({
     -- Servers that must always exist on any machine this config lands on.
     -- Mason installs them on first startup if they are missing.
-    ensure_installed = {
-        "lua_ls",
-        "basedpyright",
-        "bashls",
-        "clangd",
-        "gopls",
-        "rust_analyzer",
-    },
+    ensure_installed = {},
 
     -- Install `ensure_installed` entries automatically on startup.
     automatic_installation = true,
