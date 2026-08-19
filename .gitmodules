@@ -61,3 +61,24 @@
 [submodule "pack/basics/start/friendly-snippets"]
 	path = pack/basics/start/friendly-snippets
 	url = https://github.com/rafamadriz/friendly-snippets.git
+[submodule "pack/basics/start/mini.sessions"]
+	path = pack/basics/start/mini.sessions
+	url = https://github.com/nvim-mini/mini.sessions.git
+[submodule "pack/basics/start/mini.surround"]
+	path = pack/basics/start/mini.surround
+	url = https://github.com/nvim-mini/mini.surround.git
+[submodule "pack/basics/start/mini.ai"]
+	path = pack/basics/start/mini.ai
+	url = https://github.com/nvim-mini/mini.ai.git
+[submodule "pack/basics/start/mini.align"]
+	path = pack/basics/start/mini.align
+	url = https://github.com/nvim-mini/mini.align.git
+[submodule "pack/basics/start/mini.splitjoin"]
+	path = pack/basics/start/mini.splitjoin
+	url = https://github.com/nvim-mini/mini.splitjoin.git
+[submodule "pack/basics/start/mini.bracketed"]
+	path = pack/basics/start/mini.bracketed
+	url = https://github.com/nvim-mini/mini.bracketed.git
+[submodule "pack/basics/start/mini.bufremove"]
+	path = pack/basics/start/mini.bufremove
+	url = https://github.com/nvim-mini/mini.bufremove.git
