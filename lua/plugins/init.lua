@@ -1,5 +1,6 @@
 require('plenary')
 
+require("plugins.window-picker")
 require("plugins.mason")
 require("plugins.lsp")
 require("plugins.blink")
