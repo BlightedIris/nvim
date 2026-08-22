@@ -6,10 +6,9 @@ print(shell)
 vim.keymap.set("n", "<leader>t", function() vim.cmd.terminal(shell) end)
 
 local builtin = require('telescope.builtin')
--- Format: single action for every filetype. Conform uses the configured
--- formatter (Mason-installed) and falls back to the LSP when there is none.
+-- Format: uses the attached LSP's built-in formatting capability.
 vim.keymap.set({ 'n', 'v' }, '<C-s>', function()
-    require('conform').format({ async = true, lsp_format = 'fallback' })
+    vim.lsp.buf.format({ async = true })
 end, { noremap = true, desc = 'Format buffer/selection' })
 
 -- Window navigation
