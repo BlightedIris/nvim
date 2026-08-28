@@ -145,19 +145,29 @@ actually want a second, independent conversation.
 | --- | --- | --- | --- |
 | `<leader>bd` | n | Delete the current buffer, preserving window layout | [mini.bufremove] |
 | `<leader>bD` | n | Force delete the buffer (discards unsaved changes) | [mini.bufremove] |
-| `<leader>ss` | n | Write / overwrite a named session | [mini.sessions] |
+| `<leader>ss` | n | Write a session (prompts for a name) | [mini.sessions] |
+| `<leader>sS` | n | Overwrite an existing session | [mini.sessions] |
 | `<leader>sl` | n | Load a session | [mini.sessions] |
 | `<leader>sx` | n | Delete a session | [mini.sessions] |
+| `<leader>sc` | n | Clear session: reset to the default UI | [mini.sessions] |
+| `<leader>sf` | n | Fetch the current repo's session file | [mini.sessions] |
 | `<leader>t` | n | Open a terminal (PowerShell on Windows, `$SHELL` elsewhere) | remaps |
 | `<Esc>` | t | Leave terminal insert mode (`<C-\><C-n>`) | remaps |
 | `<leader>?` | n | Open this cheatsheet | remaps |
 
-Sessions live in `stdpath('data')/sessions`. `autowrite` is on (saved on
-exit); `autoread` is off, so startup is never hijacked.
+Inside a git repo, the session lives in a `Session.vim` at the repo root
+(created on exit if missing, and gitignored automatically); elsewhere,
+sessions live in `stdpath('data')/sessions` named after the cwd. On boot
+with no file argument: a repo's session file is restored if present,
+otherwise the default UI opens; outside a repo, the most recent global
+session is resumed. Boot is the *only* time a session loads implicitly —
+after a `:cd` into a repo, `<leader>sf` fetches its session explicitly,
+and leaving a repo changes nothing.
 
-Starting `nvim` with no file argument opens a fixed three-pane layout:
-Neo-tree left, editor over terminal in the middle, Ollama chat on the right
-(`lua/ricardo/gui_setup.lua`). Passing a file skips this.
+The default UI is a fixed three-pane layout: Neo-tree left, editor over
+terminal in the middle, Ollama chat on the right
+(`lua/ricardo/gui_setup.lua`). Starting `nvim` with a file argument skips
+both session restore and exit save.
 
 <!-- Plugin docs -->
 
