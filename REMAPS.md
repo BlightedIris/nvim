@@ -16,6 +16,8 @@ set.
 | --- | --- | --- | --- |
 | `<C-h>` / `<C-j>` / `<C-k>` / `<C-l>` | n | Focus window left/down/up/right | remaps |
 | `{N}<C-w>w` | n | Jump to window `N` (numbers shown in the lualine winbar) | native |
+| `<C-o>` / `<C-i>` | n | Back / forward through the jumplist (undo a `gd`, search, `G`, …) | native |
+| `` ` ` `` / `g;` | n | Toggle to the position before the last jump / last **change** | native |
 | `<C-d>` / `<C-u>` | n | Half-page down/up, cursor stays centered (`zz`) | remaps |
 | `n` / `N` | n | Next/previous search match, centered and unfolded (`zzzv`) | remaps |
 | `[b` / `]b` | n | Previous / next buffer | [mini.bracketed] |
@@ -56,6 +58,12 @@ Requires `rg` and `fd` on `PATH`.
 | `gci` | n | Incoming calls — "who calls this?" | LSP |
 | `gco` | n | Outgoing calls — "what does this call?" | LSP |
 
+In (System)Verilog, `K` anywhere inside a component instantiation shows the
+**component type's** docs — its comment block, parameters, and ports — instead
+of svlangserver's position-dependent hover (`lua/ricardo/sv_component.lua`).
+Press `K` again to focus the float and scroll it; elsewhere `K` is plain
+hover.
+
 ## Fix & refactor
 
 | Keys | Mode | Action | Source |
@@ -83,7 +91,10 @@ family.
 | Keys | Mode | Action | Source |
 | --- | --- | --- | --- |
 | `J` / `K` | v | Move selected lines down / up (reindent, keep selection) | remaps |
-| `sa` + motion + char | n, v | Add surrounding (`saiw"` quotes a word) | [mini.surround] |
+| `<C-/>` | n, v | Toggle comment on line / selection | remaps |
+| `gcc` / `gc` + motion | n | Toggle comment on line / motion (`gcip` a paragraph) | native |
+| `sa` + motion + char | n | Add surrounding (`saiw"` quotes a word) | [mini.surround] |
+| `si` / `sa` + char | v | Surround the selection: `i` hugs it tight `(sel)`, `a` pads it `( sel )` | remaps + [mini.surround] |
 | `sd` + char | n | Delete surrounding (`sd(`) | [mini.surround] |
 | `sr` + old + new | n | Replace surrounding (`sr"'`) | [mini.surround] |
 | `sf` / `sF` + char | n | Find surrounding right / left | [mini.surround] |
@@ -93,6 +104,11 @@ family.
 | `gS` | n, v | Toggle one-line ⇄ multi-line arguments/blocks | [mini.splitjoin] |
 | `[u` / `]u` | n | Previous / next undo state | [mini.bracketed] |
 | `[y` / `]y` | n | Cycle the last paste through the yank history | [mini.bracketed] |
+
+For visual `si`/`sa`, either half of a bracket pair works — `si(` and `si)`
+both give `(sel)` — and the matching half is filled in on the other side.
+Non-bracket characters (quotes, `*`, backticks, …) repeat on both sides.
+Mirrors the `vi(`/`va(` idea: select, then `s` + `i`/`a` + char.
 
 ### Select a chunk of code (text objects)
 
@@ -119,6 +135,12 @@ Work with any operator (`d`, `c`, `y`, `v`, …), searching up to 500 lines away
 Sources: LSP, CodeCompanion, path, buffer, and Minuet (Ollama-backed FIM ghost
 text, prioritized via `score_offset`).
 
+In (System)Verilog, `<C-Space>` inside a component instantiation floats the
+component's header (parameters + ports) instead of the completion menu — the
+server has no signature help for instantiations. The float stays up while you
+type and closes on leaving insert mode; auto-completion while typing is
+unaffected.
+
 ## Ask an AI
 
 | Keys | Mode | Action | Source |
@@ -138,6 +160,28 @@ text, prioritized via `score_offset`).
 spawning a new buffer (plain `:CodeCompanionChat` always creates one, silently
 abandoning in-progress drafts). Use `<leader>cno`/`<leader>cnc` when you
 actually want a second, independent conversation.
+
+## Debug
+
+VSCode's debug keys. Panels ([nvim-dap-ui]) open automatically when a session
+starts and close when it ends.
+
+| Keys | Mode | Action | Source |
+| --- | --- | --- | --- |
+| `<F5>` | n | Start / continue (picks the launch config) | [nvim-dap] |
+| `<S-F5>` | n | Stop the session | [nvim-dap] |
+| `<F9>` | n | Toggle breakpoint on the current line | [nvim-dap] |
+| `<F10>` | n | Step over | [nvim-dap] |
+| `<F11>` | n | Step into | [nvim-dap] |
+| `<S-F11>` | n | Step out | [nvim-dap] |
+| `<leader>B` | n | Breakpoint with a condition (prompts) | [nvim-dap] |
+| `<leader>u` | n | Toggle the debug UI panels manually | [nvim-dap-ui] |
+| `<leader>e` | n, v | Evaluate expression under cursor / selection | [nvim-dap-ui] |
+
+Adapters are Mason-managed like the LSPs (`lua/plugins/dap.lua`): debugpy for
+Python (launches the current file with the project venv, same resolution as
+basedpyright), codelldb for C/C++ (prompts for the executable — build with
+`-g`), and bash-debug-adapter for shell scripts.
 
 ## Buffers, sessions & terminals
 
@@ -179,6 +223,8 @@ both session restore and exit save.
 [mini.splitjoin]: pack/basics/start/mini.splitjoin/README.md
 [mini.surround]: pack/basics/start/mini.surround/README.md
 [neo-tree]: pack/basics/start/neo-tree-nvim/README.md
+[nvim-dap]: pack/basics/start/nvim-dap/README.md
+[nvim-dap-ui]: pack/basics/start/nvim-dap-ui/README.md
 [telescope]: pack/basics/start/telescope/README.md
 [blink.cmp]: pack/basics/start/blink-cmp/README.md
 [codecompanion]: pack/basics/start/codecompanion-nvim/README.md
