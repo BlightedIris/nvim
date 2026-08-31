@@ -15,6 +15,7 @@ set.
 | Keys | Mode | Action | Source |
 | --- | --- | --- | --- |
 | `<C-h>` / `<C-j>` / `<C-k>` / `<C-l>` | n | Focus window left/down/up/right | remaps |
+| `<C-S-h>` / `<C-S-j>` / `<C-S-k>` / `<C-S-l>` | n | Move window to far left/bottom/top/right | remaps |
 | `{N}<C-w>w` | n | Jump to window `N` (numbers shown in the lualine winbar) | native |
 | `<C-d>` / `<C-u>` | n | Half-page down/up, cursor stays centered (`zz`) | remaps |
 | `n` / `N` | n | Next/previous search match, centered and unfolded (`zzzv`) | remaps |

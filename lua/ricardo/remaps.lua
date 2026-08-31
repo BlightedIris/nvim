@@ -17,6 +17,14 @@ vim.keymap.set('n', '<C-j>', '<C-w>j', { noremap = true })
 vim.keymap.set('n', '<C-k>', '<C-w>k', { noremap = true })
 vim.keymap.set('n', '<C-l>', '<C-w>l', { noremap = true })
 
+-- Move the current window to the far left/bottom/top/right. Shifted chords
+-- since the unshifted ones navigate; needs a terminal with the extended-keys
+-- protocol to tell <C-S-l> apart from <C-l>.
+vim.keymap.set('n', '<C-S-h>', '<C-w>H', { noremap = true })
+vim.keymap.set('n', '<C-S-j>', '<C-w>J', { noremap = true })
+vim.keymap.set('n', '<C-S-k>', '<C-w>K', { noremap = true })
+vim.keymap.set('n', '<C-S-l>', '<C-w>L', { noremap = true })
+
 -- Move the selected lines up/down, reindenting and reselecting
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", { noremap = true, silent = true })
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", { noremap = true, silent = true })
