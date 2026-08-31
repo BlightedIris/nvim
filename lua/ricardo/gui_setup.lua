@@ -24,11 +24,18 @@ local M = {}
 -- (lua/plugins/mini-sessions.lua) uses it both for the blank-slate boot /
 -- <leader>sc and to re-dress a restored session, which carries only file
 -- windows (neo-tree and terminals don't serialize into session files).
--- Bottom terminal: full-width split taking a quarter of the vertical space.
+-- Bottom terminal: splits below the current file window at a quarter of the
+-- vertical space, so it shares that window's width and never slides under
+-- the neo-tree sidebar (a botright split would span the whole screen).
 -- Leaves the cursor in the terminal; also bound to <leader>t (remaps.lua).
 M.open_terminal = function()
     local shell = vim.fn.has("win32") == 1 and "powershell" or vim.o.shell
-    vim.cmd("botright " .. math.floor(vim.o.lines * 0.25) .. "split")
+    -- Invoked from a sidebar or another terminal: hop back to the last-used
+    -- window first so the split lands under the editor, not the sidebar.
+    if vim.bo.buftype ~= "" or vim.bo.filetype == "neo-tree" then
+        vim.cmd.wincmd("p")
+    end
+    vim.cmd("belowright " .. math.floor(vim.o.lines * 0.25) .. "split")
     vim.cmd.terminal(shell)
 end
 

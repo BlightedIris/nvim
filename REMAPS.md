@@ -15,6 +15,7 @@ set.
 | Keys | Mode | Action | Source |
 | --- | --- | --- | --- |
 | `<C-h>` / `<C-j>` / `<C-k>` / `<C-l>` | n | Focus window left/down/up/right | remaps |
+| `<C-S-h>` / `<C-S-j>` / `<C-S-k>` / `<C-S-l>` | n | Move window to far left/bottom/top/right (needs a terminal with extended keys) | remaps |
 | `{N}<C-w>w` | n | Jump to window `N` (numbers shown in the lualine winbar) | native |
 | `<C-o>` / `<C-i>` | n | Back / forward through the jumplist (undo a `gd`, search, `G`, …) | native |
 | `` ` ` `` / `g;` | n | Toggle to the position before the last jump / last **change** | native |
