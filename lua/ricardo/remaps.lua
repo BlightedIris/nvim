@@ -1,9 +1,38 @@
 -- Terminal mode
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
-local shell = vim.fn.has("win32") == 1 and "powershell" or vim.o.shell
-print("Shell set to:")
-print(shell)
-vim.keymap.set("n", "<leader>t", function() vim.cmd.terminal(shell) end)
+-- Bottom terminal split at 25% height (same one the default UI opens)
+vim.keymap.set("n", "<leader>t", function() require('ricardo.gui_setup').open_terminal() end)
+
+-- Surround a visual selection, mirroring the vi(/va( idea: select, then
+-- s + i/a + char. `i` hugs the selection tight `(sel)`, `a` pads it
+-- `( sel )`; typing either half of a bracket pair works, the matching
+-- half is filled in. Non-bracket chars (quotes etc.) repeat on both sides.
+-- Delegates to mini.surround's add, so multiline/blockwise selections work.
+do
+    local open_to_close = { ['('] = ')', ['['] = ']', ['{'] = '}', ['<'] = '>' }
+    local close_to_open = {}
+    for o, c in pairs(open_to_close) do close_to_open[c] = o end
+
+    -- mini.surround's own convention: an opening char pads, a closing char
+    -- hugs. So i/a just normalizes whatever was typed to the right half.
+    local function surround_selection(padded)
+        local ok, char = pcall(vim.fn.getcharstr)
+        if not ok or char == vim.keycode('<Esc>') then return end
+        if padded then
+            char = close_to_open[char] or char
+        else
+            char = open_to_close[char] or char
+        end
+        vim.api.nvim_feedkeys(
+            ':' .. vim.keycode('<C-u>') .. 'lua MiniSurround.add("visual")\r' .. char,
+            'n', false)
+    end
+
+    vim.keymap.set('x', 'si', function() surround_selection(false) end,
+        { desc = 'Surround selection (tight)' })
+    vim.keymap.set('x', 'sa', function() surround_selection(true) end,
+        { desc = 'Surround selection (padded)' })
+end
 
 local builtin = require('telescope.builtin')
 -- Format: uses the attached LSP's built-in formatting capability.
@@ -17,9 +46,26 @@ vim.keymap.set('n', '<C-j>', '<C-w>j', { noremap = true })
 vim.keymap.set('n', '<C-k>', '<C-w>k', { noremap = true })
 vim.keymap.set('n', '<C-l>', '<C-w>l', { noremap = true })
 
+-- Move the current window to the far left/bottom/top/right. Shifted chords
+-- since the unshifted ones navigate; needs a terminal with the extended-keys
+-- protocol to tell <C-S-l> apart from <C-l>.
+vim.keymap.set('n', '<C-S-h>', '<C-w>H', { noremap = true })
+vim.keymap.set('n', '<C-S-j>', '<C-w>J', { noremap = true })
+vim.keymap.set('n', '<C-S-k>', '<C-w>K', { noremap = true })
+vim.keymap.set('n', '<C-S-l>', '<C-w>L', { noremap = true })
+
 -- Move the selected lines up/down, reindenting and reselecting
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv", { noremap = true, silent = true })
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv", { noremap = true, silent = true })
+
+-- Toggle comment on the current line / selection. Delegates to the built-in
+-- gcc/gc mappings (hence remap = true), so it stays filetype-aware via
+-- 'commentstring'. Terminals without the extended-keys protocol deliver
+-- Ctrl+/ as <C-_>, so both chords are bound.
+for _, key in ipairs({ '<C-/>', '<C-_>' }) do
+    vim.keymap.set('n', key, 'gcc', { remap = true, desc = 'Toggle comment line' })
+    vim.keymap.set('x', key, 'gc', { remap = true, desc = 'Toggle comment selection' })
+end
 
 -- File & text search
 vim.keymap.set('n', '<leader>d', ':Neotree toggle<CR>', { noremap = true })
