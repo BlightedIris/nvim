@@ -1,5 +1,13 @@
 vim.g.mapleader = " "
 
+-- ~/.local/bin is where hand-installed tools land (e.g. verible), but not
+-- every login shell puts it on PATH. Prepend it before plugins load so
+-- executable() checks (lsp.lua's verible gate) and :terminal both see it.
+local local_bin = vim.fn.expand('~/.local/bin')
+if vim.fn.isdirectory(local_bin) == 1 and not vim.env.PATH:find(local_bin, 1, true) then
+    vim.env.PATH = local_bin .. ':' .. vim.env.PATH
+end
+
 require('plugins')
 require('ricardo')
 

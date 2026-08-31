@@ -10,15 +10,25 @@
 require("mason-lspconfig").setup({
     -- Servers that must always exist on any machine this config lands on.
     -- Mason installs them on first startup if they are missing.
-    ensure_installed = {},
+    -- basedpyright + ruff: the Python setup in lua/plugins/lsp.lua assumes
+    -- both (completions/types vs. lint/format).
+    -- svlangserver: SystemVerilog completions (verible has none); needs npm.
+    -- clangd: C/C++ (completions + clang-format + clang-tidy in one).
+    -- bashls: bash/sh; pairs with the shellcheck/shfmt tools from mason.lua.
+    -- powershell_es: PowerShell; only *runs* where pwsh exists (see lsp.lua).
+    ensure_installed = {
+        "basedpyright", "ruff", "svlangserver",
+        "clangd", "bashls", "powershell_es",
+    },
 
     -- Install `ensure_installed` entries automatically on startup.
     automatic_installation = true,
 
     -- Enable every Mason-installed server automatically.
     -- `exclude` is for servers we start ourselves (e.g. binaries not managed by
-    -- Mason, or ones needing bespoke launch logic).
+    -- Mason, or ones needing bespoke launch logic — powershell_es must not be
+    -- enabled on machines without a PowerShell to run it on).
     automatic_enable = {
-        exclude = { "verible" },
+        exclude = { "verible", "powershell_es" },
     },
 })

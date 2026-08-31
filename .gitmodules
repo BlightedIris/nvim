@@ -85,3 +85,15 @@
 [submodule "pack/basics/start/mason-lspconfig.nvim"]
 	path = pack/basics/start/mason-lspconfig.nvim
 	url = https://github.com/mason-org/mason-lspconfig.nvim.git
+[submodule "pack/basics/start/nvim-dap"]
+	path = pack/basics/start/nvim-dap
+	url = https://github.com/mfussenegger/nvim-dap.git
+[submodule "pack/basics/start/nvim-nio"]
+	path = pack/basics/start/nvim-nio
+	url = https://github.com/nvim-neotest/nvim-nio.git
+[submodule "pack/basics/start/nvim-dap-ui"]
+	path = pack/basics/start/nvim-dap-ui
+	url = https://github.com/rcarriga/nvim-dap-ui.git
+[submodule "pack/basics/start/mason-nvim-dap.nvim"]
+	path = pack/basics/start/mason-nvim-dap.nvim
+	url = https://github.com/jay-babu/mason-nvim-dap.nvim.git

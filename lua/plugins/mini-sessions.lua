@@ -16,6 +16,22 @@ local function close_sidebars()
     pcall(vim.cmd, 'Neotree close')
 end
 
+-- Since the chrome (neo-tree, terminal, AI chat) never round-trips through
+-- session files, tear it down before a load so terminals from the outgoing
+-- layout don't pile up as hidden buffers, and rebuild it after.
+local function close_chrome()
+    close_sidebars()
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+        if vim.bo[buf].buftype == 'terminal' then
+            pcall(vim.api.nvim_buf_delete, buf, { force = true })
+        end
+    end
+end
+
+local function open_chrome()
+    require('ricardo.gui_setup').open_chrome()
+end
+
 sessions.setup({
     -- Boot loading and exit saving are handled by the autocmds below (which
     -- also know about repo-local sessions), so mini.sessions itself must
@@ -24,7 +40,9 @@ sessions.setup({
     autowrite = false,
     directory = sessions_dir,
     hooks = {
-        pre = { write = close_sidebars },
+        pre = { write = close_sidebars, read = close_chrome },
+        -- restores only bring back file windows; re-dress them
+        post = { read = open_chrome },
     },
 })
 
@@ -64,6 +82,8 @@ end
 local function source_session(file)
     vim.cmd('silent! source ' .. vim.fn.fnameescape(file))
     vim.v.this_session = file
+    -- repo sessions bypass mini.sessions, so its post.read hook doesn't fire
+    open_chrome()
 end
 
 -- Replacing the whole layout must never eat unsaved work.
