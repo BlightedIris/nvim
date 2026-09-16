@@ -88,8 +88,8 @@ end
 -- navigation. svlangserver's own linting stays on: it runs verilator, whose
 -- compile errors complement verible's style lint.
 -- svlangserver's hover/signature gaps on instantiations are papered over by
--- lua/ricardo/sv_component.lua (K and insert-mode <C-Space> float the
--- component type's header instead).
+-- lua/ricardo/sv_component.lua (K, normal-mode <C-Space>/<C-@>, and
+-- insert-mode <C-Space> float the component type's header instead).
 vim.lsp.config('svlangserver', {
   on_attach = function(client)
     -- keep vim.lsp.buf.format() resolving to verible
