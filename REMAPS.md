@@ -59,11 +59,11 @@ Requires `rg` and `fd` on `PATH`.
 | `gci` | n | Incoming calls — "who calls this?" | LSP |
 | `gco` | n | Outgoing calls — "what does this call?" | LSP |
 
-In (System)Verilog, `K` anywhere inside a component instantiation shows the
-**component type's** docs — its comment block, parameters, and ports — instead
-of svlangserver's position-dependent hover (`lua/ricardo/sv_component.lua`).
-Press `K` again to focus the float and scroll it; elsewhere `K` is plain
-hover.
+In (System)Verilog, `K` (also `<C-Space>`/`<C-@>` in normal mode) anywhere
+inside a component instantiation shows the **component type's** docs — its
+comment block, parameters, and ports — instead of svlangserver's
+position-dependent hover (`lua/ricardo/sv_component.lua`). Press it again to
+focus the float and scroll it; elsewhere it's plain hover.
 
 ## Fix & refactor
 
@@ -140,7 +140,8 @@ In (System)Verilog, `<C-Space>` inside a component instantiation floats the
 component's header (parameters + ports) instead of the completion menu — the
 server has no signature help for instantiations. The float stays up while you
 type and closes on leaving insert mode; auto-completion while typing is
-unaffected.
+unaffected. In normal mode, `<C-Space>` (and `<C-@>`, what ConPTY sends for
+Ctrl+Space) does the same thing as `K` — see the `K` entry above.
 
 ## Ask an AI
 

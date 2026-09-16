@@ -12,9 +12,9 @@
 -- symbol index is the cross-file fallback), and float the module header —
 -- doc comments, parameters, and ports.
 --
--- Wired up as: normal-mode `K` inside an instantiation (falls back to plain
--- hover elsewhere, see the FileType autocmd below) and insert-mode <C-Space>
--- (see lua/plugins/blink.lua).
+-- Wired up as: normal-mode `K` and <C-Space>/<C-@> inside an instantiation
+-- (falls back to plain hover elsewhere, see the FileType autocmd below), and
+-- insert-mode <C-Space> (see lua/plugins/blink.lua).
 local M = {}
 
 local sv_fts = { systemverilog = true, verilog = true }
@@ -173,15 +173,21 @@ function M.show_component_docs(opts)
     return true
 end
 
--- K: component docs inside an instantiation, plain LSP hover elsewhere.
+-- K / <C-Space> / <C-@>: component docs inside an instantiation, plain LSP
+-- hover elsewhere. <C-@> covers Windows Terminal/ConPTY, which sends NUL for
+-- Ctrl+Space instead of the real key (see lua/plugins/blink.lua).
 vim.api.nvim_create_autocmd('FileType', {
     pattern = { 'systemverilog', 'verilog' },
     callback = function(args)
-        vim.keymap.set('n', 'K', function()
+        local function hover_or_docs()
             if not M.show_component_docs() then
                 vim.lsp.buf.hover()
             end
-        end, { buffer = args.buf, desc = 'Hover (component docs in instantiations)' })
+        end
+        for _, lhs in ipairs({ 'K', '<C-Space>', '<C-@>' }) do
+            vim.keymap.set('n', lhs, hover_or_docs,
+                { buffer = args.buf, desc = 'Hover (component docs in instantiations)' })
+        end
     end,
 })
 
