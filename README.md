@@ -5,29 +5,32 @@ Personal Neovim configuration. Plugins are tracked as git submodules under
 
 ## Prerequisites
 
-- **Neovim 0.11+** (required by `vim.lsp.enable()` in `lua/plugins/lsp.lua`
-  and by the main-branch `nvim-treesitter` submodule)
+Only two, because [`install/`](install/README.md) handles the rest:
+
+- **Neovim 0.12+** — the pinned `nvim-treesitter` submodule is the `main`
+  rewrite, which requires it
 - **Git**
-- **A C compiler on `PATH`** (MSVC/clang/gcc, or `zig cc`) — needed by
-  treesitter to compile parsers on first launch
-- **ripgrep** (`rg`) and **fd** — used by Telescope's `find_files`/`live_grep`
-- **A Nerd Font** in your terminal — for `nvim-web-devicons` and `lualine`
-  icons
 
-Optional, for specific features:
+Everything else — the C compiler and `tree-sitter-cli` that build the parsers,
+ripgrep and fd for Telescope, Node and Python for the Mason packages,
+ImageMagick for inline images, the `jupytext` CLI, the Neovim venv that molten
+runs in, the language servers and debug adapters — is installed by
+`install/install.sh` (or `install.ps1` on Windows). Run
+`nvim -l install/install.lua --tree` to see the full list and what needs what.
 
-- **Language servers** for whichever languages you edit: `gopls`,
-  `rust-analyzer`, `clangd`, `basedpyright`, `lua-language-server`,
-  `bash-language-server`, PowerShell Editor Services (`powershell_es`),
-  `verible-verilog-ls` (see `lua/plugins/lsp.lua`)
-- **Ollama**, running locally, for AI completion/chat:
-  - `gpt-oss:20b` pulled for CodeCompanion's Ollama chat adapter
-  - a custom `qwen2.5-coder-fim` model for Minuet's FIM completion, built
-    from `qwen2.5-coder:7b` with a Modelfile that pins `num_ctx=2048`
-    (see comments in `lua/plugins/minuet-ai.lua`)
+Optional, and off unless you ask for them (`--with=ollama`, or `--all`):
+
+- **Ollama**, running locally, for CodeCompanion's default chat adapter
+  (`ollama pull gpt-oss:20b` gives it a model)
 - **Claude Code CLI** (`claude` on `PATH`) for CodeCompanion's `claude_code`
-  chat adapter
+  agent
 - **`gh` CLI** for opening links from CodeCompanion chat history
+- **verible** and **verilator** for SystemVerilog
+- **A Nerd Font** for `nvim-web-devicons` and `lualine` icons
+
+Two things no installer can do for you: use a terminal that implements the
+Kitty graphics protocol (Ghostty, Kitty, WezTerm) if you want image.nvim to
+draw plots, and point your terminal at the Nerd Font once it is installed.
 
 ## Install
 

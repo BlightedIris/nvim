@@ -1,4 +1,4 @@
-bin
-lib
-share
+/bin
+/lib
+/share
 Session.vim
