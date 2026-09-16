@@ -83,9 +83,10 @@ focus the float and scroll it; elsewhere it's plain hover.
 | `[l` / `]l` | n | Previous / next location-list entry | [mini.bracketed] |
 
 `virtual_text` is off; diagnostics pop up in a float after 250ms idle
-(`updatetime` + `CursorHold` autocmd in `init.lua`). The uppercase `[D`/`]D`
-exist so mini.bracketed keeps the lowercase pair in its `[`/`]` + suffix
-family.
+(`updatetime` + `CursorHold` autocmd in `lua/ricardo/diagnostics.lua`), and
+the float closes as soon as the cursor moves or `K` hover is requested. The
+uppercase `[D`/`]D` exist so mini.bracketed keeps the lowercase pair in its
+`[`/`]` + suffix family.
 
 ## Edit text
 

@@ -112,7 +112,7 @@ vim.keymap.set('n', 'gy', vim.lsp.buf.type_definition, { noremap = true })
 vim.keymap.set('n', '<leader>gw', builtin.lsp_workspace_symbols, { noremap = true })
 
 -- Hover documentation (shows in a float)
-vim.keymap.set('n', 'K', vim.lsp.buf.hover, { noremap = true })
+vim.keymap.set('n', 'K', require('ricardo.diagnostics').request_hover, { noremap = true })
 
 
 vim.keymap.set('n', '<leader>cd', ':ChatDelete<CR>',
