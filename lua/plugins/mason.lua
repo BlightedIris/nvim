@@ -14,8 +14,8 @@ require("mason").setup({
 -- Plain tools (not LSPs, so mason-lspconfig's ensure_installed can't cover
 -- them). bashls shells out to shellcheck for lint and shfmt for formatting;
 -- Mason's bin dir is on PATH for child processes, so installing here is all
--- the wiring they need.
-local ensure_tools = { "shellcheck", "shfmt" }
+-- the wiring they need. glow renders markdown for ricardo.markdown_preview.
+local ensure_tools = { "shellcheck", "shfmt", "glow" }
 local registry = require("mason-registry")
 local missing = vim.tbl_filter(function(name)
     local ok, pkg = pcall(registry.get_package, name)
