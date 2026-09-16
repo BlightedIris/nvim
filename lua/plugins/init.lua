@@ -15,7 +15,6 @@ require("plugins.telescope")
 require("plugins.todo-comments")
 require("plugins.codecompanion")
 require("plugins.treesitter")
-require("plugins.render-markdown")
 
 -- mini.nvim modules
 require("plugins.mini-ai")
