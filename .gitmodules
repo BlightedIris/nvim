@@ -94,3 +94,21 @@
 [submodule "pack/basics/start/mason-nvim-dap.nvim"]
 	path = pack/basics/start/mason-nvim-dap.nvim
 	url = https://github.com/jay-babu/mason-nvim-dap.nvim.git
+[submodule "pack/basics/start/image.nvim"]
+	path = pack/basics/start/image.nvim
+	url = https://github.com/3rd/image.nvim.git
+[submodule "pack/basics/start/jupytext.nvim"]
+	path = pack/basics/start/jupytext.nvim
+	url = https://github.com/GCBallesteros/jupytext.nvim.git
+[submodule "pack/basics/start/molten-nvim"]
+	path = pack/basics/start/molten-nvim
+	url = https://github.com/benlubas/molten-nvim.git
+[submodule "pack/basics/start/otter.nvim"]
+	path = pack/basics/start/otter.nvim
+	url = https://github.com/jmbuhr/otter.nvim.git
+[submodule "pack/basics/start/quarto-nvim"]
+	path = pack/basics/start/quarto-nvim
+	url = https://github.com/quarto-dev/quarto-nvim.git
+[submodule "pack/basics/start/render-markdown.nvim"]
+	path = pack/basics/start/render-markdown.nvim
+	url = https://github.com/MeanderingProgrammer/render-markdown.nvim.git
