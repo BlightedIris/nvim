@@ -16,9 +16,13 @@ require("mason-lspconfig").setup({
     -- clangd: C/C++ (completions + clang-format + clang-tidy in one).
     -- bashls: bash/sh; pairs with the shellcheck/shfmt tools from mason.lua.
     -- powershell_es: PowerShell; only *runs* where pwsh exists (see lsp.lua).
+    -- docker_language_server: Docker's own server -- Dockerfiles, Compose and
+    -- Bake in one binary, and a Go binary at that, so unlike dockerls it needs
+    -- no npm. Compose files need their filetype set first (see lsp.lua).
     ensure_installed = {
         "basedpyright", "ruff", "svlangserver",
         "clangd", "bashls", "powershell_es",
+        "docker_language_server",
     },
 
     -- Install `ensure_installed` entries automatically on startup.

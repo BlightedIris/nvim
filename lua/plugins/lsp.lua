@@ -70,6 +70,29 @@ end
 -- (not LSPs), ensured in lua/plugins/mason.lua since mason-lspconfig only
 -- manages language servers.
 
+-- Docker: docker-language-server is Docker's own, covering Dockerfiles,
+-- Compose and Bake in the one binary. Mason installs it, so
+-- lua/plugins/mason-lspconfig.lua enables it automatically -- nothing to
+-- configure here.
+--
+-- What it does need is a filetype to attach to. Neovim detects `dockerfile`
+-- out of the box but has no Compose detection at all, so a compose file is
+-- plain `yaml` and the server never sees it; the name it (and Microsoft's
+-- compose-language-service) expects is `yaml.docker-compose`. Dotted, so
+-- `yaml` stays in the filetype too and treesitter/yamlls are unaffected.
+--
+-- Patterns rather than `filename` entries: a slash-free pattern is matched
+-- against the basename anchored at both ends, and positive-priority patterns
+-- are checked *before* the extension table -- so these beat plain `yaml` for
+-- `compose.override.yaml` and `docker-compose.prod.yml`, while leaving
+-- something like `decompose.yaml` alone.
+vim.filetype.add({
+  pattern = {
+    ['compose%..*ya?ml'] = 'yaml.docker-compose',
+    ['docker%-compose%..*ya?ml'] = 'yaml.docker-compose',
+  },
+})
+
 -- PowerShell: powershell-editor-services bundles PSScriptAnalyzer, so lint,
 -- format, and completions all come from the one server. The server itself
 -- runs *on* PowerShell, so it can only start where pwsh (or Windows
