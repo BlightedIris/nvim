@@ -9,6 +9,8 @@ set.
 - `lua/plugins/mini-*.lua` — one file per mini.nvim module
 - `lua/plugins/codecompanion.lua` — AI chat mappings (defined there because
   they depend on that plugin's setup)
+- `lua/ricardo/markdown_preview.lua` — the markdown/glow view toggle
+  (bound per-buffer in `ftplugin/markdown.lua`)
 
 ## Move around
 
@@ -64,6 +66,21 @@ inside a component instantiation shows the **component type's** docs — its
 comment block, parameters, and ports — instead of svlangserver's
 position-dependent hover (`lua/ricardo/sv_component.lua`). Press it again to
 focus the float and scroll it; elsewhere it's plain hover.
+
+### Read markdown
+
+| Keys | Mode | Action | Source |
+| --- | --- | --- | --- |
+| `<S-Tab>` | n | Toggle the window between markdown source and a `glow` render | markdown_preview |
+| `q` | n | Back to the source (from inside a render) | markdown_preview |
+
+Markdown files open as ordinary editable text; `<S-Tab>` swaps the window
+over to a [glow] render and `<S-Tab>` again swaps it back, cursor intact. The
+render is read-only (it's a terminal buffer), which is the whole reason it's
+a toggle rather than the default view. It's built from the *buffer*, so
+unsaved edits show up, and it re-renders on resize so tables reflow to the
+window width — the thing an in-buffer renderer can't do. Needs `glow` on
+PATH; Mason installs it (`lua/plugins/mason.lua`).
 
 ## Fix & refactor
 
@@ -225,6 +242,7 @@ both session restore and exit save.
 [mini.sessions]: pack/basics/start/mini.sessions/README.md
 [mini.splitjoin]: pack/basics/start/mini.splitjoin/README.md
 [mini.surround]: pack/basics/start/mini.surround/README.md
+[glow]: https://github.com/charmbracelet/glow
 [neo-tree]: pack/basics/start/neo-tree-nvim/README.md
 [nvim-dap]: pack/basics/start/nvim-dap/README.md
 [nvim-dap-ui]: pack/basics/start/nvim-dap-ui/README.md
